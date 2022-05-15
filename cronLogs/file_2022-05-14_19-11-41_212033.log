@@ -1,0 +1,2 @@
+2022-05-14 19:11:41.216 | INFO     | cron:start_logger:26 - Початок роботи крону з таймаутом в : 45 секунд, на адресу: https://karpow.pp.ua/actions/gor_gromada_news_tg_bot/airCron.php
+2022-05-14 19:11:46.510 | INFO     | __main__:<module>:111 - Вихід із програми.

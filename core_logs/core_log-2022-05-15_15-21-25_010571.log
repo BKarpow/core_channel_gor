@@ -1,0 +1,5 @@
+2022-05-15 15:21:25.013 | INFO     | __main__:<module>:19 - Початок роботи сервісів для каналу @horodysche_channel
+2022-05-15 15:21:35.092 | INFO     | rsswatch:loop:155 - Початок роботи сканеру новини, на канал @horodysche_channel
+2022-05-15 15:21:35.941 | DEBUG    | rsswatch:get_data_xml:109 - XML Отримано!
+2022-05-15 15:21:35.993 | DEBUG    | rsswatch:parse_rss:122 - <rss_parser._parser.Parser object at 0x000001B1FDC19B40>
+2022-05-15 15:22:07.132 | INFO     | __main__:<module>:181 - Вихід із програми.
