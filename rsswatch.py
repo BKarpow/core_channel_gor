@@ -3,6 +3,7 @@ from loguru import logger
 import requests as req
 
 import datetime
+import re
 import telebot
 import time
 import os
@@ -32,6 +33,11 @@ class RssNewsSender:
 
     def terminate(self) -> None:
         self._work = False
+
+
+    def clear_html_nbsp(self, text: str) -> str:
+        text = re.sub(r'\n+', '\n', text)
+        return re.sub(r'&[a-z]+;', '', text)
 
 
     @logger.catch
@@ -142,9 +148,12 @@ class RssNewsSender:
     @logger.catch
     def template_news_for_telegram(self, news) -> str:
         dt = self.get_string_date(self._convert_date_str_to_unix(news.publish_date))
+        title = self.clear_html_nbsp(news.title)
+        des = self.clear_html_nbsp(news.description)
         return f'''{dt}
-{news.title}
-{news.description}
+{title}
+{des}
+
 {news.link}
 '''
 

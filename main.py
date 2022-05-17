@@ -4,11 +4,18 @@ from commendant import CommendantTime
 from weather import HorWBot
 from cron import CronDemon
 from rsswatch import RssNewsSender
-from loguru import logger 
+from loguru import logger
+import argparse
 import threading
 import os
 import time
 import telebot
+
+
+parser = argparse.ArgumentParser(description="Команда для автозапуску")
+parser.add_argument("-c", dest="comand", default=False, help='Вкажіть команду з якою запускати програму.')
+args = parser.parse_args()
+
 
 # log file for core
 logs_dir = os.path.join(os.path.dirname(__file__), 'core_logs')
@@ -92,6 +99,44 @@ def show_status():
         s = get_status_modul(s)
         print(f'{m} - {s}.')
 
+def start_module(module, status_name: str) -> None:
+    global status_modules
+    if not status_modules[status_name]:
+        module.run()
+        threading.Thread(target=module.loop).start()
+        status_modules[status_name] = True
+    else:
+        logger.error(f"Модуль {status_name} вже запущено")
+
+
+def stop_module(module, status_name: str) -> None:
+    global status_modules
+    if status_modules[status_name]:
+        module.terminate()
+        status_modules[status_name] = False
+    else:
+        logger.error(f"Модуль {status_name} вже зупинено!")
+
+
+def start_all_modules():
+    global status_modules
+    start_module(rss, 'RssNewsSender')
+    start_module(air, 'AirAlertUa')
+    start_module(comendant, 'ComendantAlert')
+    start_module(w, 'WeatherAlert')
+
+
+def stop_all_modules():
+    global status_modules
+    stop_module(rss, 'RssNewsSender')
+    stop_module(comendant, 'ComendantAlert')
+    stop_module(air, 'AirAlertUa')
+    stop_module(w, 'WeatherAlert')
+
+
+if args.comand == 'all':
+    start_all_modules()
+
 
 while True:
     comm = input("Command>")
@@ -99,77 +144,29 @@ while True:
         case 'status' | 'list' | 'info':
             show_status()
         case 'start-rss':
-            rss.run()
-            threading.Thread(target=rss.loop).start()
-            status_modules['RssNewsSender'] = True
+            start_module(rss, 'RssNewsSender')
         case 'start-cron':
-            cron.run()
-            threading.Thread(target=cron.loop).start()
-            status_modules['CronAlert'] = True
+            start_module(cron, 'CronAlert')
         case 'start-wea':
-            w.run()
-            threading.Thread(target= w.loop).start()
-            logger.info('Повідомляти про погоду - запущений.')
-            status_modules['WeatherAlert'] = True
+            start_module(w, 'WeatherAlert')
         case 'start-com':
-            comendant.run()
-            threading.Thread(target=comendant.loop).start()
-            logger.info('Повідомляти про ком. годину - запущений.')
-            status_modules['ComendantAlert'] = True
+            start_module(comendant, 'ComendantAlert')
         case 'start-air':
-            air.run()
-            threading.Thread(target=air.loop).start()
-            logger.info('Сканер повітряних тривог - запущений.')
-            status_modules['AirAlertUa'] = True
+            start_module(air, 'AirAlertUa')
         case 'start' | 'run' | 'go':
-            rss.run()
-            threading.Thread(target=rss.loop).start()
-            status_modules['RssNewsSender'] = True
-            air.run()
-            threading.Thread(target=air.loop).start()
-            logger.info('Сканер повітряних тривог - запущений.')
-            comendant.run()
-            threading.Thread(target=comendant.loop).start()
-            logger.info('Повідомляти про ком. годину - запущений.')
-            w.run()
-            threading.Thread(target= w.loop).start()
-            logger.info('Повідомляти про погоду - запущений.')
-            
-            status_modules['AirAlertUa'] = True
-            status_modules['ComendantAlert'] = True
-            status_modules['WeatherAlert'] = True
+            start_all_modules()
         case 'stop':
-            rss.terminate()
-            status_modules['RssNewsSender'] = False
-            comendant.terminate()
-            logger.info('Повідомляти про ком. годину - зупинено.')
-            air.terminate()
-            logger.info('Сканер повітряних тривог - зупинено.')
-            w.terminate()
-            logger.info('Повідомляти про погоду - зупинено.')
-           
-            status_modules['AirAlertUa'] = False
-            status_modules['ComendantAlert'] = False
-            status_modules['WeatherAlert'] = False
+            stop_all_modules()
         case 'stop-rss':
-            rss.terminate()
-            status_modules['RssNewsSender'] = False
+            stop_module(rss, 'RssNewsSender')
         case 'stop-cron':
-            cron.terminate()
-            logger.info('Крон - зупинено.')
-            status_modules['CronAlert'] = False
+            stop_module(cron, 'CronAlert')
         case 'stop-air':
-            air.terminate()
-            logger.info('Сканер повітряних тривог - зупинено.')
-            status_modules['AirAlertUa'] = False
+            stop_module(air, 'AirAlertUa')
         case 'stop-com':
-            comendant.terminate()
-            logger.info('Повідомляти про ком. годину - зупинено.')
-            status_modules['ComendantAlert'] = False
+            stop_module(comendant, 'ComendantAlert')
         case 'stop-wea':
-            w.terminate()
-            logger.info('Повідомляти про погоду - зупинка...')
-            status_modules['WeatherAlert'] = False
+            stop_module(w, 'WeatherAlert')
         case 'help' | '?' | '-h' | '/?':
             help()
         case 'ex' | 'close' | 'exit':

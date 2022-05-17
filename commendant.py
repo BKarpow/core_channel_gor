@@ -16,7 +16,10 @@ class CommendantTime:
         self.TIME_END = os.getenv("TIME_COMMENDANT_END")
         self.bot = telebot.TeleBot(self.BOT_TOKEN)
         self.log_filename_format = 'comendant_{time}.log'
+        self.message_start = '❗️❗️ ПОЧАЛАСЬ КОМЕНДАНТЬСКА ГОДИНА, ТУСИТИ ПО МІСТІ ЗАБОРОНЕНО❗️❗️❗️❗️❗️❗️'
+        self.message_end = '❗️❗️ ЗАКІНЧИЛАСЬ КОМЕНДАНТЬСКА ГОДИНА, ТУСИТИ ВЖЕ МОЖНА❗️😀😀'
         self._work = True
+
 
 
     def is_valid_format_time(self, time: str) -> bool:
@@ -42,7 +45,6 @@ class CommendantTime:
         time['startM'] = int( self.TIME_START.split(":")[1] )
         time['stopH'] = int( self.TIME_END.split(":")[0] )
         time['stopM'] = int( self.TIME_END.split(":")[1] )
-        logger.debug(time)
         return time
 
 
@@ -100,11 +102,11 @@ class CommendantTime:
                 logger.info('Процес відправлення повідомлень про ком. годину зупинено!')
                 break
             if self.is_start_time(time):
-                self.send_message("❗️❗️ ПОЧАТОК КОМЕНДАНСЬКОЇ ГОДИНИ, ЗАЛИШАЙТЕСЬ В ДОМА ❗️❗️")
-                logger.info("❗️❗️ ПОЧАТОК КОМЕНДАНСЬКОЇ ГОДИНИ, ЗАЛИШАЙТЕСЬ В ДОМА ❗️❗️")
+                self.send_message(self.message_start)
+                logger.info(self.message_start)
             if self.is_stop_time(time):
-                self.send_message("❗️❗️ Кінець комендатської години, можна гуляти 😀😀😀 ")
-                logger.info("❗️❗️ Кінець комендатської години, можна гуляти 😀😀😀 ")
+                self.send_message(self.message_end)
+                logger.info(self.message_end)
             sleep(self.TIMEOUT)
 
 
