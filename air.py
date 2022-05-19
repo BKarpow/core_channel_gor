@@ -1,6 +1,7 @@
 from requests import get
 from loguru import logger
 from time import sleep, strftime
+from screenshot import ScreenAirAlerts
 
 import datetime
 import os
@@ -26,6 +27,7 @@ class AirAlarmHorodische:
         self.db_cursor = self.connection.cursor()
         self.last_time_stamp = 0
         self._work = True
+        self.screen = ScreenAirAlerts('@tester19992', os.getenv('TELEGRAM_TOKEN'))
         
         self.init_table_for_db()
 
@@ -103,6 +105,11 @@ class AirAlarmHorodische:
 
     def air_start(self, message):
         self.last_time_stamp = int( message['date'])
+        try:
+            self.screen.shot_screen()
+            self.screen.send_scren_to_telegram()
+        except:
+            logger.error('Помилка відправки скріна...')
         
 
     def air_end(self, message) -> str:
