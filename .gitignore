@@ -1,5 +1,11 @@
 /air_alerts.db
+/air_alerts_tester.db
+/air_alerts_t1.db
+/air_alerts_t2.db
 /Lib
+/screens
+/cronLogs
+/core_logs
 /logs
 /rss_news.db
 /Scripts

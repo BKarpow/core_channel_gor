@@ -27,7 +27,7 @@ class AirAlarmHorodische:
         self.db_cursor = self.connection.cursor()
         self.last_time_stamp = 0
         self._work = True
-        self.screen = ScreenAirAlerts('@tester19992', os.getenv('TELEGRAM_TOKEN'))
+        self.screen = ScreenAirAlerts('@horodysche_air_alert', os.getenv('TELEGRAM_TOKEN'))
         
         self.init_table_for_db()
 
@@ -103,11 +103,11 @@ class AirAlarmHorodische:
         return list_alerts
 
 
-    def air_start(self, message):
+    def air_start(self, message,  msg_text: str):
         self.last_time_stamp = int( message['date'])
         try:
             self.screen.shot_screen()
-            self.screen.send_scren_to_telegram()
+            self.screen.send_scren_to_telegram(msg_text)
         except:
             logger.error('Помилка відправки скріна...')
         
@@ -127,18 +127,19 @@ class AirAlarmHorodische:
 
     def send_start_or_end_air_alarm(self, message) -> None:
         if re.search(self.keyword_air_start, message['message']):
-            self.air_start(message)
             alerts_from_today = self.get_all_air_alerts_from_today()
             len_alerts = len(alerts_from_today) + 1
             kw = message['keyword'].replace('#', '').replace('_', ' ')
             mess = self.message_air_alarm_start.format(keyword=kw,la=len_alerts, date=self.get_string_date(message['date']))
             self.send_message( mess )
             logger.info(mess)
+            self.air_start(message, mess)
         if re.search(self.keyword_air_end, message['message']):
             dur = self.air_end(message)
-            logger.info(self.message_air_alarm_end.format(dur=dur, date=self.get_string_date(message['date'])))
-            
-            self.send_message(self.message_air_alarm_end.format(dur=dur, date=self.get_string_date(message['date'])))
+            msg = self.message_air_alarm_end.format(dur=dur, date=self.get_string_date(message['date']))
+            logger.info(msg)
+            self.send_message(msg)
+            self.bot.send_message('@horodysche_air_alert', msg)
 
 
     def init_table_for_db(self):

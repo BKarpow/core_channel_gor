@@ -34,13 +34,13 @@ class ScreenAirAlerts:
         self.webdrive = webdriver.Chrome()
         self.webdrive.get(self.url_source)
         screen_name = self.get_screen_path()
-        time.sleep(10)
+        time.sleep(22)
         self.webdrive.save_screenshot(screen_name)
         logger.info(f'Файл скріну тривог здережено як: {screen_name}')
         self.webdrive.close()
 
 
-    def send_scren_to_telegram(self):
+    def send_scren_to_telegram(self, msg: str):
         if self.tg_chat_id == '' or self.tg_bot_token == '':
             logger.error('Не вказано назву каналу, або токен боту каналу для Telegram')
             return
@@ -49,7 +49,7 @@ class ScreenAirAlerts:
             return
         bot = telebot.TeleBot(self.tg_bot_token)
         fc = open(self.last_path_screen, 'rb')
-        bot.send_photo(self.tg_chat_id, fc, caption='Поточна мапа тривог по Україні')
+        bot.send_photo(self.tg_chat_id, fc, caption=msg)
 
 
     def run(self):
