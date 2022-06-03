@@ -37,7 +37,7 @@ class RssNewsSender:
 
     def clear_html_nbsp(self, text: str) -> str:
         text = re.sub(r'\n+', '\n', text)
-        return re.sub(r'&[a-z]+;', '', text)
+        return re.sub(r'&[a-z0-9]+;', '', text)
 
 
     @logger.catch
@@ -171,7 +171,7 @@ class RssNewsSender:
 if __name__ == "__main__":
     news = RssNewsSender()
     news.save_log_file()
-    news.loop()
+    # news.loop()
     # logger.debug(news.rss_feed)
 
 

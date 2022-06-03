@@ -27,7 +27,7 @@ class AirAlarmHorodische:
         self.db_cursor = self.connection.cursor()
         self.last_time_stamp = 0
         self._work = True
-        self.screen = ScreenAirAlerts('@horodysche_air_alert', os.getenv('TELEGRAM_TOKEN'))
+        self.screen = ScreenAirAlerts(self.chat_id, os.getenv('TELEGRAM_TOKEN'))
         
         self.init_table_for_db()
 
@@ -107,7 +107,7 @@ class AirAlarmHorodische:
         self.last_time_stamp = int( message['date'])
         try:
             self.screen.shot_screen()
-            self.screen.send_scren_to_telegram(msg_text)
+            self.screen.send_scren_to_telegram(msg_text + '\nМапа повітряних тривог.')
         except:
             logger.error('Помилка відправки скріна...')
         

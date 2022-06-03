@@ -97,7 +97,7 @@ class HorWBot:
             sunrise = self.get_date("%H:%M",item['sunrise'])
             sunset = self.get_date("%H:%M", item['sunset'])
         clouds = item['clouds']
-        wind_speed = item['wind_speed']
+        wind_speed = int( item['wind_speed'] )
         wind_deg = self.get_mark_for_wind_angle(item['wind_deg'])
         weather_info = self.get_info_weather(item['weather'][0]['id'])
         weather_title = weather_info['title']
@@ -162,11 +162,11 @@ class HorWBot:
             {"id": 313, "title": "Моросить ⛆🌧", "description": "дощ і мряка", "icon": "09d"},
             {"id": 314, "title": "Моросить ⛆🌧🌧🌧", "description": "сильний дощ і мряка", "icon": "09d"},
             {"id": 321, "title": "Моросить ⛆🌧", "description": "дощова мряка", "icon": "09d"},
-            {"id": 500, "title": "Дощ 💧", "description": "легкий дощ", "icon": "10d"},
-            {"id": 501, "title": "Дощ 💧", "description": "помірний дощ", "icon": "10d"},
-            {"id": 502, "title": "Дощ 💧💧", "description": "сильний дощ", "icon": "10d"},
-            {"id": 503, "title": "Дощ 💧💧💧", "description": "дуже сильний дощ", "icon": "10d"},
-            {"id": 504, "title": "Дощ 💧💧💧💧", "description": "екстремальний дощ", "icon": "10d"},
+            {"id": 500, "title": "Дощик 💧", "description": "легкий дощ", "icon": "10d"},
+            {"id": 501, "title": "Дощ поиірний 💧", "description": "помірний дощ", "icon": "10d"},
+            {"id": 502, "title": "Дощ гарний 💧💧", "description": "сильний дощ", "icon": "10d"},
+            {"id": 503, "title": "Дощ (як з відра) 💧💧💧", "description": "дуже сильний дощ", "icon": "10d"},
+            {"id": 504, "title": "Дощара (та ну нах..) 💧💧💧💧", "description": "екстремальний дощ", "icon": "10d"},
             {"id": 511, "title": "Дощ 💧❄", "description": "холодний дощ", "icon": "13d"},
             {"id": 520, "title": "Дощ 💧💧", "description": "невеликий інтенсивний дощ ", "icon": "09d"},
             {"id": 521, "title": "Дощ 💧💧", "description": "дощ", "icon": "10d"},

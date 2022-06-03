@@ -16,8 +16,8 @@ class CommendantTime:
         self.TIME_END = os.getenv("TIME_COMMENDANT_END")
         self.bot = telebot.TeleBot(self.BOT_TOKEN)
         self.log_filename_format = 'comendant_{time}.log'
-        self.message_start = '❗️❗️ ПОЧАЛАСЬ КОМЕНДАНТЬСКА ГОДИНА, ТУСИТИ ПО МІСТІ ЗАБОРОНЕНО❗️❗️❗️❗️❗️❗️'
-        self.message_end = '❗️❗️ ЗАКІНЧИЛАСЬ КОМЕНДАНТЬСКА ГОДИНА, ТУСИТИ ВЖЕ МОЖНА❗️😀😀'
+        self.message_start = '❗️❗️КОМЕНДАНТСЬКА ГОДИНА - ПОЧАЛАСЬ, ТУСИТИ ПО МІСТІ ЗАБОРОНЕНО❗️❗️❗️❗️❗️❗️'
+        self.message_end = '❗️❗️КОМЕНДАНТСЬКА ГОДИНА - ЗАКІНЧИЛАСЬ, ТУСИТИ ВЖЕ МОЖНА❗️😀😀'
         self._work = True
 
 

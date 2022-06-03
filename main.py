@@ -5,6 +5,7 @@ from weather import HorWBot
 from cron import CronDemon
 from rsswatch import RssNewsSender
 from loguru import logger
+from losses import CombatLosses
 import argparse
 import threading
 import os
@@ -24,6 +25,10 @@ if not os.path.isdir(logs_dir):
 log_file_core = os.path.join(logs_dir, 'core_log-{time}.log')
 logger.add(log_file_core)
 logger.info('Початок роботи сервісів для каналу ' + os.getenv('CHAT_ID'))
+
+
+# combat losses
+combat_losses = CombatLosses()
 
 
 # rss
@@ -58,6 +63,7 @@ air.add_city_tag('Городищенська_територіальна_гром
 def help():
     commands = [
         ('start', 'Запуск всіх модулів.'),
+        ('start-losses', 'Запуск повідомлень про бойові втрати.'),
         ('start-air', 'Запуск повідомлень про тривогу.'),
         ('start-com', 'Запуск повідомлень про комендантську годину.'),
         ('start-wea', 'Запуск повідомлень про погоду.'),
@@ -69,6 +75,7 @@ def help():
         ('stop-wea', 'Зупиняє повідомленя про погоду.'),
         ('stop-cron', 'Зупиняє крон.'),
         ('stop-rss', 'Зупиняє сканування новин.'),
+        ('stoo-losses', 'Зупинка повідомлень про бойові втрати.'),
         ('status', 'Показує статуси модулдів.'),
         ('exit', 'Вийти із сервісу.'),
     ]
@@ -82,6 +89,7 @@ status_modules = {
     'ComendantAlert': False,
     'WeatherAlert': False,
     'CronAlert': False,
+    'CombatLosses': False,
 }
 
 
@@ -124,6 +132,7 @@ def start_all_modules():
     start_module(air, 'AirAlertUa')
     start_module(comendant, 'ComendantAlert')
     start_module(w, 'WeatherAlert')
+    start_module(combat_losses, 'CombatLosses')
 
 
 def stop_all_modules():
@@ -132,6 +141,7 @@ def stop_all_modules():
     stop_module(comendant, 'ComendantAlert')
     stop_module(air, 'AirAlertUa')
     stop_module(w, 'WeatherAlert')
+    stop_module(combat_losses, 'CombatLosses')
 
 
 if args.comand == 'all':
@@ -143,6 +153,8 @@ while True:
     match comm:
         case 'status' | 'list' | 'info':
             show_status()
+        case 'start-losses':
+            start_module(combat_losses, 'CombatLosses')
         case 'start-rss':
             start_module(rss, 'RssNewsSender')
         case 'start-cron':
@@ -157,6 +169,8 @@ while True:
             start_all_modules()
         case 'stop':
             stop_all_modules()
+        case 'stop-losses':
+            stop_module(combat_losses, 'CombatLosses')
         case 'stop-rss':
             stop_module(rss, 'RssNewsSender')
         case 'stop-cron':

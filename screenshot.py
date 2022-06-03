@@ -34,7 +34,7 @@ class ScreenAirAlerts:
         self.webdrive = webdriver.Chrome()
         self.webdrive.get(self.url_source)
         screen_name = self.get_screen_path()
-        time.sleep(22)
+        time.sleep(60)
         self.webdrive.save_screenshot(screen_name)
         logger.info(f'Файл скріну тривог здережено як: {screen_name}')
         self.webdrive.close()
