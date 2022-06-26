@@ -1,5 +1,4 @@
-from ast import parse
-from statistics import mode
+
 import telebot
 import time
 import os
@@ -24,7 +23,9 @@ class CombatLosses:
         self.json_data =  {}
         self._work = True
         self.losses_list = []
+        self.war_start_date = "24.02.2022 05:00:00"
         self.text_losses = r'Загальні бойові втрати противника'
+        self.format_time_loses = "%d.%m.%Y %H:%M:%S"
         logger.add(self.log_file_info.absolute(), level='INFO', rotation='10 KB', compression='zip')
         logger.add(self.log_file_error.absolute(), level='ERROR', rotation='10 KB', compression='zip')
 
@@ -37,6 +38,24 @@ class CombatLosses:
         self._work = False
 
 
+    def get_timestamp_from_date(self, date: str) -> int:
+        ''' Конвертує рядок дати в формат unix (секунди) '''
+        return int( time.mktime( time.strptime(date, self.format_time_loses) ) )
+
+
+    def calc_duration_war(self) -> int:
+        ''' Поверне тривалість війни в днях '''
+        date_today = time.strftime(self.format_time_loses)
+        unix_start_war = self.get_timestamp_from_date(self.war_start_date)
+        unix_today = self.get_timestamp_from_date(date_today)
+        res = (unix_today - unix_start_war) / 60 / 60
+        # h = int( res % 24) години
+        d = int(res / 24) # Дні війни
+        d += 1 # Поправка
+        logger.debug(f"result calc {d}, date start war: {self.war_start_date}")
+        return d
+
+
     def get_path_dir(self, dir: PosixPath) -> PosixPath:
         if not dir.exists():
             os.mkdir(dir.absolute())
@@ -47,7 +66,6 @@ class CombatLosses:
         try:
             req = get(self.json_data_url)
             if req.status_code == 200:
-                logger.info(req)
                 return req.json()
             else:
                 logger.error(req)
@@ -59,9 +77,12 @@ class CombatLosses:
         ''' Повертає список повідомлення про втрати противника  '''
         msg = []
         self.json_data = self.get_json_data()
-        for m in self.json_data['messages']:
-            if re.search(self.text_losses, m['message']):
-                msg.append(m)
+        try:
+            for m in self.json_data['messages']:
+                if re.search(self.text_losses, m['message']):
+                    msg.append(m)
+        except:
+            logger.error('Не коректні вхіжні дані...')
         return msg
 
 
@@ -85,13 +106,16 @@ class CombatLosses:
 
 
     def strip_tags(self, text: str) -> str:
+        logger.debug(f"Фільтрція повідомлення: {text}")
         text = text.replace('<br />', '\n')
         text = text.replace('Підписатися', 'Джерело')
         text = text.replace('ГШ ЗСУ', '@GeneralStaffZSU')
         t = re.sub(r'<[^>]+?>', '', text);
         t = re.sub(r'\n+', '\n', t)
         t = re.sub(r'#[\w]+', '', t)
-        t += '\n #втрати_рашистів'
+        dw = self.calc_duration_war()
+        t += f"\n Війна триває вже {dw} днів."
+        t += '\n#втрати_рашистів'
         return t
 
 
@@ -103,10 +127,12 @@ class CombatLosses:
 
     def is_unique_losses(self, msg) -> bool:
         uniq = True
-        file_image = self.losses_img_dir / (str(msg['media']['photo']['date']) + '.jpg')
-        if file_image.exists():
+        try:
+            file_image = self.losses_img_dir / (str(msg['media']['photo']['date']) + '.jpg')
+            if file_image.exists():
+                uniq = False
+        except:
             uniq = False
-            logger.debug(f'Такі втрати вже було відправлено! {file_image}')
         return uniq
 
 
@@ -129,13 +155,6 @@ class CombatLosses:
                 time.sleep(self.timeout_loop)
         except KeyboardInterrupt:
             logger.info('Припинено користувачем.')
-
-
-
-# if __name__ == '__main__':
-#     m = CombatLosses()
-#     ms = m.get_message_losses()
-#     m.loop()
 
 
     

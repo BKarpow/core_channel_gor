@@ -139,7 +139,6 @@ class AirAlarmHorodische:
             msg = self.message_air_alarm_end.format(dur=dur, date=self.get_string_date(message['date']))
             logger.info(msg)
             self.send_message(msg)
-            self.bot.send_message('@horodysche_air_alert', msg)
 
 
     def init_table_for_db(self):

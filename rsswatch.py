@@ -90,7 +90,7 @@ class RssNewsSender:
         if self.db_cursor.fetchone() is None:
             return True
         else:
-            return None
+            return False
 
 
     @logger.catch
