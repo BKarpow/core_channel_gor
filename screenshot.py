@@ -31,7 +31,7 @@ class ScreenAirAlerts:
 
 
     def shot_screen(self):
-        self.webdrive = webdriver.Chrome()
+        self.webdrive = webdriver.Firefox()
         self.webdrive.get(self.url_source)
         screen_name = self.get_screen_path()
         time.sleep(60)
