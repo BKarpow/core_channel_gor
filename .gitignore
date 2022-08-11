@@ -12,3 +12,6 @@
 /Scripts
 /test message for air alert.txt
 /__pycache__
+/losses_images
+/.idea
+geckodriver.log
