@@ -1,3 +1,0 @@
-2022-05-14 19:14:10.750 | INFO     | cron:loop:42 - Початок роботи крону з таймаутом в : 45 секунд, на адресу: https://karpow.pp.ua/actions/gor_gromada_news_tg_bot/airCron.php
-2022-05-14 19:14:32.238 | INFO     | __main__:<module>:98 - Крон - зупинено.
-2022-05-14 19:14:57.428 | INFO     | cron:loop:45 - Луп крону зупинено!

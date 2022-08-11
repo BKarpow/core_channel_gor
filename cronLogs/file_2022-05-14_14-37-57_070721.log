@@ -1,5 +1,0 @@
-2022-05-14 14:37:57.073 | INFO     | cron:start_logger:34 - Початок роботи крону з таймаутом в : 45 секунд, на адресу: https://karpow.pp.ua/actions/gor_gromada_news_tg_bot/airCron.php
-2022-05-14 14:37:57.074 | INFO     | air:loop:198 - ['#Черкаська_область', 'Городищенська_територіальна_громада']
-2022-05-14 14:37:57.078 | INFO     | commendant:input_times:34 -  Час початку 22:00, кінця 05:00 
-2022-05-14 14:37:57.082 | INFO     | cron:is_valid_env_data:22 - Перевірка змінних оточення для крону пройшла успішно.
-2022-05-14 14:37:57.088 | DEBUG    | commendant:parse_time:44 - {'startH': 22, 'startM': 0, 'stopH': 5, 'stopM': 0}

@@ -8,6 +8,12 @@ import telebot
 import time
 
 
+def get_time() -> int:
+	''' Повертає часову мітку у форматі секунд unix '''
+	d = time.strftime('%d.%m.%Y %H:%M:%S')
+	return  int( time.mktime(time.strptime(d,"%d.%m.%Y %H:%M:%S")) )
+
+
 class HorWBot:
     def __init__(self) -> None:
         self.log_file = 'weather_{time}.log'
@@ -15,7 +21,8 @@ class HorWBot:
         self.API_URL = os.getenv('W_URL')
         self.bot = telebot.TeleBot(os.getenv('TELEGRAM_TOKEN'))
         self.CHAT_ID = os.getenv('CHAT_ID')
-        self.time_send = '08:05'
+        # self.CHAT_ID = "@tester19992"
+        self.time_send = '07:40'
         self.timeout_loop = 0.65
         self.w_data = {}
         self.current_w = {}
@@ -23,13 +30,11 @@ class HorWBot:
         self.do_send = True
         self._work = True
 
-
     def save_log_to_file(self, file_path = None) -> None:
         if file_path is None:
             logger.add(self.log_file)
         else:
             logger.add(file_path)
-
 
     def save_log_file(self):
         root_dir = os.path.dirname(__file__)
@@ -39,11 +44,9 @@ class HorWBot:
         file_path_log = os.path.join(logs_dir, self.log_file)
         logger.add(file_path_log)
 
-
     def send_message(self, text: str) -> None:
         logger.info(f'Відправлено повідомлення Telgram в чат {self.CHAT_ID}')
         self.bot.send_message(self.CHAT_ID, text)
-
 
     def get_url_for_api_request(self) -> str:
         params = {
@@ -57,7 +60,6 @@ class HorWBot:
         http_query = "&".join([k+"="+v for k,v in params.items()])
         return f'{self.API_URL}?{http_query}'
 
-
     def get_api_data(self):
         try:
             logger.debug(self.get_url_for_api_request())
@@ -69,11 +71,9 @@ class HorWBot:
         except:
             logger.error('Помилка інтернету...')
 
-
     def get_date(self,format: str, unix_time: int) -> str:
         return datetime.fromtimestamp(unix_time).strftime(format)
 
-    
     def get_weather(self) -> None:
         self.get_api_data()
         if self.w_data.get('current') != None:
@@ -85,17 +85,16 @@ class HorWBot:
         else:
             logger.error("Не отримано прогноз погоди.")
 
-
     def template(self, item, current = True) -> str:
         if current:
-            dt = self.get_date("%d.%m.%Y %H:%M", item['dt'])
+            dt = self.get_date("(%d/%m) %H:%M", item['dt'])
         else:
             dt = self.get_date("%H:%M", item['dt'])
         temp = int( item['temp'])
         feels_like = int( item['feels_like'])
-        if current:
-            sunrise = self.get_date("%H:%M",item['sunrise'])
-            sunset = self.get_date("%H:%M", item['sunset'])
+        # if current:
+        #     sunrise = self.get_date("%H:%M",item['sunrise'])
+        #     sunset = self.get_date("%H:%M", item['sunset'])
         clouds = item['clouds']
         wind_speed = int( item['wind_speed'] )
         wind_deg = self.get_mark_for_wind_angle(item['wind_deg'])
@@ -104,13 +103,11 @@ class HorWBot:
         weather_description = weather_info['description']
         if current:
             t = f"""
-На даний час {dt}:
+Дата: {dt}:
 Температура 🌡 {temp}℃,
 відчуваєтся як: 🌡 {feels_like}℃.
 Вітер: 🪁 {wind_deg} {wind_speed}м/с.
-Схід 🔅 в {sunrise}, захід 🔅 в {sunset}.
 {weather_title}
-
 """
         else: 
             t = f'''Прогноз на {dt}:
@@ -121,10 +118,8 @@ class HorWBot:
 '''
         return t
 
-
     def get_current(self) -> str:
         return self.template(self.current_w)
-
 
     def get_today_weather(self) -> list:
         todays = []
@@ -133,13 +128,54 @@ class HorWBot:
         for h in self.hourly_w:
             if self.get_date(format, h['dt']) == today_date and int(self.get_date('%H', h['dt'])) % 2 == 0:
                 todays.append(h)
-        
         return todays
 
+    def get_maximum_temp(self, w: list) -> int:
+        ''' Метод повертатиме максимальну температуру з прогнозу '''
+        mx_temp = 0
+        for item in w:
+            temp = int(item['temp'])
+            if temp > mx_temp:
+                mx_temp = temp
+        return mx_temp
+
+    def get_sun_times(self) -> tuple:
+        return self.get_date("%H:%M", self.current_w['sunrise']), self.get_date("%H:%M",self.current_w['sunset'])
+
+    def get_manimum_temp(self, w: list) -> int:
+        ''' Метод повертатиме мінімальну температуру з прогнозу '''
+        mn_temp = self.get_maximum_temp(w)
+        for item in w:
+            temp = int(item['temp'])
+            if temp < mn_temp:
+                mn_temp = temp
+        return mn_temp
+
+    def get_tomorow_weather(self) -> list:
+        todays = []
+        format = '%d'
+        today_date = time.strftime(format)
+        for h in self.hourly_w:
+            tm_date = datetime.fromtimestamp(get_time() + 86400).strftime(format)
+            if self.get_date(format, h['dt']) == tm_date and int(self.get_date('%H', h['dt'])) % 2 == 0:
+                todays.append(h)
+        return todays
 
     def get_today(self) -> str:
-        return "\n".join([ self.template(x, False) for x in self.get_today_weather()] )
+        w = self.get_today_weather()
+        mx = self.get_maximum_temp(w)
+        mn = self.get_manimum_temp(w)
+        res = f"Максимальна: 🌡{mx}℃, мінімальна: 🌡{mn}℃\n"
+        res += "\n".join([self.template(x, False) for x in w])
+        return res
 
+    def get_tomorow(self):
+        w = self.get_tomorow_weather()
+        mx = self.get_maximum_temp(w)
+        mn = self.get_manimum_temp(w)
+        res = f"Максимальна: 🌡{mx}℃, мінімальна: 🌡{mn}℃\n"
+        res += "\n".join([ self.template(x, True) for x in w] )
+        return res
 
     def get_info_weather(self, weather_id:int) -> dict:
         data_trans = [
@@ -162,7 +198,7 @@ class HorWBot:
             {"id": 313, "title": "Моросить ⛆🌧", "description": "дощ і мряка", "icon": "09d"},
             {"id": 314, "title": "Моросить ⛆🌧🌧🌧", "description": "сильний дощ і мряка", "icon": "09d"},
             {"id": 321, "title": "Моросить ⛆🌧", "description": "дощова мряка", "icon": "09d"},
-            {"id": 500, "title": "Дощик 💧", "description": "легкий дощ", "icon": "10d"},
+            {"id": 500, "title": "Можливий дощ 💧", "description": "легкий дощ", "icon": "10d"},
             {"id": 501, "title": "Дощ поиірний 💧", "description": "помірний дощ", "icon": "10d"},
             {"id": 502, "title": "Дощ гарний 💧💧", "description": "сильний дощ", "icon": "10d"},
             {"id": 503, "title": "Дощ (як з відра) 💧💧💧", "description": "дуже сильний дощ", "icon": "10d"},
@@ -205,7 +241,6 @@ class HorWBot:
         logger.error(f'Немає перекладу для цього {weather_id}')
         return {"id": 804, "title": "Невідомо", "description": "Невідомо", "icon": "50d"}
 
-
     def get_mark_for_wind_angle(self, wind_angle:int) -> str:
         wind_angle = int( wind_angle )
         if wind_angle > 0 and wind_angle < 90:
@@ -227,22 +262,23 @@ class HorWBot:
         else:
             return f"ХЗ?"
 
-
     def send_waather(self) -> None:
-        mess = 'Доброго ранку 💟 Городищена, погода на сьогодні 🔆: \n'
-        mess += self.get_current()
+        mess = 'Доброго ранку 💟 Городище, трішки погоди 🔆\n'
+        sunrise, sunset = self.get_sun_times()
+        mess += f"\n🔆🔆🔆 cхід у {sunrise}, захід у {sunset}\n"
+        # mess += self.get_current()
         mess += self.get_today()
+        mess += "\n\n Завтра "
+        mess += datetime.fromtimestamp(get_time() + 86400).strftime("%d.%m.%Y") + "\n"
+        mess += self.get_tomorow()
         mess += '\n\nВдалого Вам дня ☑️‼️\n\n#погода'
         self.send_message(mess)
-
 
     def run(self):
         self._work = True
 
-
     def terminate(self):
         self._work = False
-
 
     def loop(self):
         logger.info(f'Почвток роботи боту прогнозу погоди для каналу {self.CHAT_ID}, спрацьовує у {self.time_send}, оновлюєтся кожні {self.timeout_loop} секунди.')
@@ -262,8 +298,6 @@ class HorWBot:
             logger.info('Програму зупинено.')
         except:
             logger.error('Помилка в циклі loop!')
-
-        
 
 
 if __name__ == "__main__":
