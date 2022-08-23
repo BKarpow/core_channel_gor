@@ -6,6 +6,7 @@ from cron import CronDemon
 from rsswatch import RssNewsSender
 from loguru import logger
 from losses import CombatLosses
+from radiation import RadiationAlert
 import argparse
 import threading
 import os
@@ -59,6 +60,11 @@ air.add_city_tag('#Черкаська_область')
 air.add_city_tag('Городищенська_територіальна_громада')
 
 
+# Radioation alert
+rad = RadiationAlert()
+rad.regions.append('#Черкаська_область')
+rad.regions.append('Городищенська_територіальна_громада')
+
 # help info
 def help():
     commands = [
@@ -69,6 +75,7 @@ def help():
         ('start-wea', 'Запуск повідомлень про погоду.'),
         ('start-cron', 'Запуск крону для відображення новини.'),
         ('start-rss', 'Запуск відображення новини.'),
+        ('start-rad', 'Запуск відображення радіаційних та хімічних загроз.'),
         ('stop', 'Зупиняє всі модулі.'),
         ('stop-air', 'Зупиняє повідомленя про тривогу.'),
         ('stop-com', 'Зупиняє повідомленя про комендантську годину.'),
@@ -76,6 +83,7 @@ def help():
         ('stop-cron', 'Зупиняє крон.'),
         ('stop-rss', 'Зупиняє сканування новин.'),
         ('stoo-losses', 'Зупинка повідомлень про бойові втрати.'),
+        ('stop-rad', 'Запуск відображення радіаційних та хімічних загроз.'),
         ('status', 'Показує статуси модулдів.'),
         ('exit', 'Вийти із сервісу.'),
     ]
@@ -90,6 +98,7 @@ status_modules = {
     'WeatherAlert': False,
     'CronAlert': False,
     'CombatLosses': False,
+    'RadiationAlert': False
 }
 
 
@@ -133,6 +142,7 @@ def start_all_modules():
     start_module(comendant, 'ComendantAlert')
     start_module(w, 'WeatherAlert')
     start_module(combat_losses, 'CombatLosses')
+    start_module(rad, 'RadiationAlert')
 
 
 def stop_all_modules():
@@ -142,6 +152,7 @@ def stop_all_modules():
     stop_module(air, 'AirAlertUa')
     stop_module(w, 'WeatherAlert')
     stop_module(combat_losses, 'CombatLosses')
+    stop_module(rad, 'RadiationAlert')
 
 
 if args.comand == 'all':
@@ -153,6 +164,8 @@ while True:
     match comm:
         case 'status' | 'list' | 'info':
             show_status()
+        case 'start-rad':
+            start_module(rad, 'RadiationAlert')
         case 'start-losses':
             start_module(combat_losses, 'CombatLosses')
         case 'start-rss':
@@ -181,6 +194,8 @@ while True:
             stop_module(comendant, 'ComendantAlert')
         case 'stop-wea':
             stop_module(w, 'WeatherAlert')
+        case 'stop-rad':
+            stop_module(rad, 'RadiationAlert')
         case 'help' | '?' | '-h' | '/?':
             help()
         case 'ex' | 'close' | 'exit':

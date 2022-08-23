@@ -91,6 +91,14 @@ class AirAlarmHorodische:
     def send_message(self, text: str):
         self.bot.send_message(self.chat_id, text)
 
+    def send_error(self, text: str):
+        text = 'Повітряні тривоги помилка: \n' + text
+        logger.debug("Send error %s" % text)
+        try:
+            self.bot.send_message("@tester199922", text)
+        except:
+            logger.error(f"Неможливо відправити помилку {text}")
+
 
     def get_all_air_alerts_from_today(self) -> list:
         list_alerts = []
@@ -107,7 +115,7 @@ class AirAlarmHorodische:
         self.last_time_stamp = int( message['date'])
         try:
             self.screen.shot_screen()
-            self.screen.send_scren_to_telegram(msg_text + '\nМапа повітряних тривог.')
+            self.screen.send_scren_to_telegram(msg_text)
         except:
             logger.error('Помилка відправки скріна...')
         
@@ -158,10 +166,13 @@ class AirAlarmHorodische:
                     # logger.debug(self.messages)
                 else:
                     logger.error('Немає повідомлень')
+                    self.send_error('Немає повідомлень')
             else:
                 logger.error(req)
+                self.send_error(f'невідома помилка, код: {req.status_code}')
         except:
             logger.error('Помилка інтернету, втрата зв\'язку.')
+            self.send_error('Помилка інтернету, втрата зв\'язку.')
 
 
     def get_messages_for_search_keywords(self) -> list:

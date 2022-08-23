@@ -19,6 +19,11 @@ class CommendantTime:
         self.message_start = '❗️❗️КОМЕНДАНТСЬКА ГОДИНА - ПОЧАЛАСЬ, ТУСИТИ ПО МІСТІ ЗАБОРОНЕНО❗️❗️❗️❗️❗️❗️'
         self.message_end = '❗️❗️КОМЕНДАНТСЬКА ГОДИНА - ЗАКІНЧИЛАСЬ, ТУСИТИ ВЖЕ МОЖНА❗️😀😀'
         self._work = True
+        self.caption_video = '''😔Щоранку вшановуємо хвилиною мовчання пам’ять загиблих.
+
+Ми пам’ятаємо воїнів, полеглих під час виконання бойових завдань із захисту державного суверенітету та територіальної цілісності України, мирних громадян, які загинули унаслідок збройної агресії рашистів проти України🙏'''
+        self.file_video = os.path.join(os.path.dirname(__file__), 'minute_mute.mp4')
+        self.send_video_time = "09:00"
 
 
 
@@ -75,6 +80,12 @@ class CommendantTime:
         #     return True
         # return False
 
+    def send_video(self) -> None:
+        if strftime('%H:%M:%S') == self.send_video_time + ':00':
+            logger.info(f'Відправка відео хвилини мовчання {self.file_video}')
+            self.bot.send_video(self.BOT_CHAT_ID, open(self.file_video, 'rb'), caption=self.caption_video)
+            logger.info('Відео хвилини мовчання відправлено.')
+
 
     def save_log_file(self):
         root_dir = os.path.dirname(__file__)
@@ -107,6 +118,7 @@ class CommendantTime:
             if self.is_stop_time(time):
                 self.send_message(self.message_end)
                 logger.info(self.message_end)
+            self.send_video()
             sleep(self.TIMEOUT)
 
 

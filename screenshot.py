@@ -10,7 +10,7 @@ import os
 class ScreenAirAlerts:
     def __init__(self, telegram_chat_id='', telegram_bot_token='') -> None:
         self.webdrive = {}
-        self.url_source = 'https://alerts.in.ua/'
+        self.url_source = 'https://map.ukrainealarm.com/'
         self.root_dir = os.path.dirname(__file__)
         self.screens_dir = os.path.join(self.root_dir, 'screens')
         self.last_path_screen = ''
@@ -34,7 +34,7 @@ class ScreenAirAlerts:
         self.webdrive = webdriver.Firefox()
         self.webdrive.get(self.url_source)
         screen_name = self.get_screen_path()
-        time.sleep(60)
+        time.sleep(25)
         self.webdrive.save_screenshot(screen_name)
         logger.info(f'Файл скріну тривог здережено як: {screen_name}')
         self.webdrive.close()
@@ -49,6 +49,8 @@ class ScreenAirAlerts:
             return
         bot = telebot.TeleBot(self.tg_bot_token)
         fc = open(self.last_path_screen, 'rb')
+        msg += '\nДжерело: map.ukrainealarm.com'
+        msg += '\n\n#мапа_тривог_Україна'
         bot.send_photo(self.tg_chat_id, fc, caption=msg)
 
 
