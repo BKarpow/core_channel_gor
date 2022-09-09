@@ -48,7 +48,11 @@ class RadiationAlert:
         ms = []
         messages = self.get_data()
         for region in self.regions:
+            if messages is None:
+                logger.error('Некоректні дані серверу тривог.')
+                continue
             for message in messages:
+                if message is None: continue
                 if message['message'] is None: continue
                 if re.search(region, message['message']):
                     message['region'] = region

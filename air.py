@@ -8,9 +8,10 @@ import os
 import telebot
 import sqlite3
 import re
+from qu import SmartSender
 
 class AirAlarmHorodische:
-    def __init__(self) -> None:
+    def __init__(self, queue: SmartSender) -> None:
         self.log_file = 'air_{time}.log'
         self.timeout_loop = 10 # інтервал перевірки нових повідомлень про повітряні тривоги в секундах
         self.bot = telebot.TeleBot(os.getenv('TELEGRAM_TOKEN'))
@@ -28,6 +29,7 @@ class AirAlarmHorodische:
         self.last_time_stamp = 0
         self._work = True
         self.screen = ScreenAirAlerts(self.chat_id, os.getenv('TELEGRAM_TOKEN'))
+        self.queue = queue
         
         self.init_table_for_db()
 
@@ -113,6 +115,7 @@ class AirAlarmHorodische:
 
     def air_start(self, message,  msg_text: str):
         self.last_time_stamp = int( message['date'])
+        self.queue.enable_active()
         try:
             self.screen.shot_screen()
             self.screen.send_scren_to_telegram(msg_text)
@@ -130,6 +133,7 @@ class AirAlarmHorodische:
         self.connection.commit()
         duration_interbal = int(message['date']) - self.last_time_stamp
         self.last_time_stamp = 0
+        self.queue.start_q_sender()
         return self.get_string_duration_alarm(duration_interbal)
 
 

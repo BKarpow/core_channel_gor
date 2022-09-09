@@ -8,9 +8,10 @@ import telebot
 import time
 import os
 import sqlite3
+from qu import SmartSender
 
 class RssNewsSender:
-    def __init__(self) -> None:
+    def __init__(self, sender: SmartSender) -> None:
         self._work = True
         self.log_file_name = 'rss_news.log'
         self.log_file_name_debug = 'rss_news_debug.log'
@@ -23,6 +24,7 @@ class RssNewsSender:
         self.format_rss_date = '%a, %d %b %Y %H:%M:%S %z'
         self.rss_feed = None
         self.timeout_loop = 300
+        self.sender = sender
 
         self.init_table_for_db()
 
@@ -142,7 +144,8 @@ class RssNewsSender:
     
     @logger.catch  
     def send_message(self, text: str):
-        self.bot.send_message(self.chat_id, text)
+        # self.bot.send_message(self.chat_id, text)
+        self.sender.send('text', text)
 
     
     @logger.catch

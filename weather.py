@@ -7,6 +7,8 @@ import os
 import telebot
 import time
 
+from qu import SmartSender
+
 
 def get_time() -> int:
 	''' Повертає часову мітку у форматі секунд unix '''
@@ -15,19 +17,20 @@ def get_time() -> int:
 
 
 class HorWBot:
-    def __init__(self) -> None:
+    def __init__(self, sender: SmartSender) -> None:
         self.log_file = 'weather_{time}.log'
         self.API_KEY = os.getenv('W_API_KEY')
         self.API_URL = os.getenv('W_URL')
         self.bot = telebot.TeleBot(os.getenv('TELEGRAM_TOKEN'))
         self.CHAT_ID = os.getenv('CHAT_ID')
         # self.CHAT_ID = "@tester19992"
-        self.time_send = '07:40'
+        self.time_send = '08:10'
         self.timeout_loop = 0.65
         self.w_data = {}
         self.current_w = {}
         self.hourly_w = {}
         self.do_send = True
+        self.sender = sender
         self._work = True
 
     def save_log_to_file(self, file_path = None) -> None:
@@ -46,7 +49,7 @@ class HorWBot:
 
     def send_message(self, text: str) -> None:
         logger.info(f'Відправлено повідомлення Telgram в чат {self.CHAT_ID}')
-        self.bot.send_message(self.CHAT_ID, text)
+        self.sender.send('text', text)
 
     def get_url_for_api_request(self) -> str:
         params = {

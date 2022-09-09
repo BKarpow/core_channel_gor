@@ -5,9 +5,10 @@ from time import strftime, sleep
 import telebot
 import os
 import re
+from qu import SmartSender
 
 class CommendantTime:
-    def __init__(self) -> None:
+    def __init__(self, queue: SmartSender) -> None:
         self.TIMEOUT = 0.65
         self.START_STOP_TRIGGER = False
         self.BOT_TOKEN = os.getenv("TELEGRAM_TOKEN")
@@ -16,14 +17,18 @@ class CommendantTime:
         self.TIME_END = os.getenv("TIME_COMMENDANT_END")
         self.bot = telebot.TeleBot(self.BOT_TOKEN)
         self.log_filename_format = 'comendant_{time}.log'
-        self.message_start = '❗️❗️КОМЕНДАНТСЬКА ГОДИНА - ПОЧАЛАСЬ, ТУСИТИ ПО МІСТІ ЗАБОРОНЕНО❗️❗️❗️❗️❗️❗️'
-        self.message_end = '❗️❗️КОМЕНДАНТСЬКА ГОДИНА - ЗАКІНЧИЛАСЬ, ТУСИТИ ВЖЕ МОЖНА❗️😀😀'
+        self.message_start = f'❗️❗️Увага ❗️❗️ ПОЧАТОК ({self.TIME_START}) КОМЕНДАНТСЬКОЇ ГОДИНИ❗️❗️❗️❗️❗️❗️'
+        self.message_end = f'❗️❗️КІНЕЦЬ ({self.TIME_END}) КОМЕНДАНТСЬКОЇ ГОДИНИ😀😀'
         self._work = True
         self.caption_video = '''😔Щоранку вшановуємо хвилиною мовчання пам’ять загиблих.
 
 Ми пам’ятаємо воїнів, полеглих під час виконання бойових завдань із захисту державного суверенітету та територіальної цілісності України, мирних громадян, які загинули унаслідок збройної агресії рашистів проти України🙏'''
         self.file_video = os.path.join(os.path.dirname(__file__), 'minute_mute.mp4')
         self.send_video_time = "09:00"
+        self.queue = queue
+
+    def set_sender(self, sender_helper):
+        self.send_method = sender_helper
 
 
 
@@ -54,7 +59,7 @@ class CommendantTime:
 
 
     def send_message(self, text: str):
-        self.bot.send_message(self.BOT_CHAT_ID, text)
+        self.queue.send('text', text)
 
 
     def is_start_time(self, time_data: dict) -> bool:
@@ -83,7 +88,8 @@ class CommendantTime:
     def send_video(self) -> None:
         if strftime('%H:%M:%S') == self.send_video_time + ':00':
             logger.info(f'Відправка відео хвилини мовчання {self.file_video}')
-            self.bot.send_video(self.BOT_CHAT_ID, open(self.file_video, 'rb'), caption=self.caption_video)
+            # self.bot.send_video(self.BOT_CHAT_ID, open(self.file_video, 'rb'), caption=self.caption_video)
+            self.queue.send('video', self.caption_video, self.file_video)
             logger.info('Відео хвилини мовчання відправлено.')
 
 

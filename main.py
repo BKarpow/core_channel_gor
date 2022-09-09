@@ -7,6 +7,8 @@ from rsswatch import RssNewsSender
 from loguru import logger
 from losses import CombatLosses
 from radiation import RadiationAlert
+from parse_rad import RadInformer
+from qu import  SmartSender
 import argparse
 import threading
 import os
@@ -28,12 +30,21 @@ logger.add(log_file_core)
 logger.info('Початок роботи сервісів для каналу ' + os.getenv('CHAT_ID'))
 
 
+# Smart Sender queue
+queue = SmartSender(os.getenv('TELEGRAM_TOKEN'), os.getenv('CHAT_ID'))
+
+# air 
+air = AirAlarmHorodische(queue)
+air.save_log_file()
+air.add_city_tag('#Черкаська_область')
+air.add_city_tag('Городищенська_територіальна_громада')
+
 # combat losses
-combat_losses = CombatLosses()
+combat_losses = CombatLosses(queue)
 
 
 # rss
-rss = RssNewsSender()
+rss = RssNewsSender(queue)
 rss.save_log_file()
 
 
@@ -44,26 +55,23 @@ cron.start_logger()
 
 
 # Weather
-w = HorWBot()
+w = HorWBot(queue)
 w.save_log_file()
 
 
 
 # commendant
-comendant = CommendantTime()
-
-
-# air 
-air = AirAlarmHorodische()
-air.save_log_file()
-air.add_city_tag('#Черкаська_область')
-air.add_city_tag('Городищенська_територіальна_громада')
+comendant = CommendantTime(queue)
 
 
 # Radioation alert
 rad = RadiationAlert()
 rad.regions.append('#Черкаська_область')
 rad.regions.append('Городищенська_територіальна_громада')
+
+
+# Radiation send level
+rad_level = RadInformer(queue)
 
 # help info
 def help():
@@ -76,6 +84,7 @@ def help():
         ('start-cron', 'Запуск крону для відображення новини.'),
         ('start-rss', 'Запуск відображення новини.'),
         ('start-rad', 'Запуск відображення радіаційних та хімічних загроз.'),
+        ('start-rad-level', 'Запуск інформера радіаційного рівні по місту.'),
         ('stop', 'Зупиняє всі модулі.'),
         ('stop-air', 'Зупиняє повідомленя про тривогу.'),
         ('stop-com', 'Зупиняє повідомленя про комендантську годину.'),
@@ -84,6 +93,7 @@ def help():
         ('stop-rss', 'Зупиняє сканування новин.'),
         ('stoo-losses', 'Зупинка повідомлень про бойові втрати.'),
         ('stop-rad', 'Запуск відображення радіаційних та хімічних загроз.'),
+        ('stop-rad-level', 'Зупинка інформера радіаційного рівні по місту.'),
         ('status', 'Показує статуси модулдів.'),
         ('exit', 'Вийти із сервісу.'),
     ]
@@ -98,7 +108,8 @@ status_modules = {
     'WeatherAlert': False,
     'CronAlert': False,
     'CombatLosses': False,
-    'RadiationAlert': False
+    'RadiationAlert': False,
+    'RadInformer': False
 }
 
 
@@ -137,12 +148,13 @@ def stop_module(module, status_name: str) -> None:
 
 def start_all_modules():
     global status_modules
+    start_module(combat_losses, 'CombatLosses')
     start_module(rss, 'RssNewsSender')
     start_module(air, 'AirAlertUa')
     start_module(comendant, 'ComendantAlert')
     start_module(w, 'WeatherAlert')
-    start_module(combat_losses, 'CombatLosses')
     start_module(rad, 'RadiationAlert')
+    start_module(rad_level, 'RadInformer')
 
 
 def stop_all_modules():
@@ -153,6 +165,7 @@ def stop_all_modules():
     stop_module(w, 'WeatherAlert')
     stop_module(combat_losses, 'CombatLosses')
     stop_module(rad, 'RadiationAlert')
+    stop_module(rad_level, 'RadInformer')
 
 
 if args.comand == 'all':
@@ -164,6 +177,8 @@ while True:
     match comm:
         case 'status' | 'list' | 'info':
             show_status()
+        case 'start-rad-level':
+            start_module(rad_level, 'RadInformer')
         case 'start-rad':
             start_module(rad, 'RadiationAlert')
         case 'start-losses':
@@ -196,6 +211,8 @@ while True:
             stop_module(w, 'WeatherAlert')
         case 'stop-rad':
             stop_module(rad, 'RadiationAlert')
+        case 'stop-rad-level':
+            stop_module(rad_level, 'RadInformer')
         case 'help' | '?' | '-h' | '/?':
             help()
         case 'ex' | 'close' | 'exit':
