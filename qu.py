@@ -8,7 +8,7 @@ from loguru import logger
 
 class SmartSender:
     def __init__(self, token: str, chat_id: str) -> None:
-        self.sleep_timeout_send = 300
+        self.sleep_timeout_send = 45
         self.chat_id = chat_id
         self.bot = telebot.TeleBot(token, parse_mode='html')
         self.connect = sqlite3.connect(
@@ -39,18 +39,21 @@ class SmartSender:
     def is_active(self):
         return bool(self._active)
 
+    def send_text_now(self, text: str):
+        self.bot.send_message(self.chat_id, text)
+
     def send_text(self, msg: str):
         if self.is_active():
             self._add_text_msg_to_q(msg)
         else:
-            logger.info(f'Send text: {msg}')
-            self.bot.send_message(self.chat_id, msg)
+            logger.info('Send text')
+            self.send_text_now(msg)
 
     def _add_text_msg_to_q(self, msg):
         q = 'INSERT INTO qq (type, msg) VALUES (?, ?)'
         self.cursor.execute(q, ('text', msg))
         self.connect.commit()
-        logger.info(f'Save to q: {msg}')
+        logger.info('Save to queue')
 
     def send_photo(self, path_file: str, msg: str):
         if self.is_active():
@@ -58,13 +61,13 @@ class SmartSender:
         else:
             with open(path_file, 'rb') as photo:
                 self.bot.send_photo(self.chat_id, photo, caption=msg)
-            logger.info(f'Send photo: {path_file}, caption: {msg}')
+            logger.info(f'Send photo: {path_file}')
             
     def _add_photo_msg_to_q(self, path_file, msg):
         q = 'INSERT INTO qq (type, path_file, msg) VALUES (?, ?, ?)'
         self.cursor.execute(q, ('photo', path_file, msg))
         self.connect.commit()
-        logger.info(f'Save to queue: file - {path_file}, caption: {msg}')
+        logger.info('Save to queue: file ')
 
     def send_video(self, path_file: str, msg: str):
         if self.is_active():
@@ -72,13 +75,13 @@ class SmartSender:
         else:
             with open(path_file, 'rb') as photo:
                 self.bot.send_video(self.chat_id, photo, caption=msg)
-            logger.info(f'Send video: {path_file}, caption: {msg}')
+            logger.info(f'Send video: {path_file}')
             
     def _add_video_msg_to_q(self, path_file, msg):
         q = 'INSERT INTO qq (type, path_file, msg) VALUES (?, ?, ?)'
         self.cursor.execute(q, ('video', path_file, msg))
         self.connect.commit()
-        logger.info(f'Save video to queue: file - {path_file}, caption: {msg}')
+        logger.info('Save video to queue: file')
 
     def send(self, type, msg:str, path_file=None):
         match type:
@@ -92,7 +95,7 @@ class SmartSender:
                 logger.error(f'None type: {type}')
 
     def get_all_messages_from_q(self) -> list:
-        q = "SELECT rowid, type, path_file, msg FROM qq ORDER BY rowid DESC"
+        q = "SELECT rowid, type, path_file, msg FROM qq ORDER BY rowid"
         res = self.cursor.execute(q)
         return res.fetchall()
 

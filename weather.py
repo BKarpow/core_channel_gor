@@ -174,10 +174,24 @@ class HorWBot:
 
     def get_tomorow(self):
         w = self.get_tomorow_weather()
+        dt = dict()
+        for item in w:
+            try:
+                dt[item['weather'][0]['id']] += 1
+            except KeyError:
+                dt[item['weather'][0]['id']] = 1
+        mx = 0
+        mx_id = 0
+        for id, count in dt.items():
+            if count > mx:
+                mx = count
+                mx_id = int(id)
+        w_desc = self.get_info_weather(mx_id)
         mx = self.get_maximum_temp(w)
         mn = self.get_manimum_temp(w)
         res = f"Максимальна: 🌡{mx}℃, мінімальна: 🌡{mn}℃\n"
-        res += "\n".join([ self.template(x, True) for x in w] )
+        res += w_desc['title'] + "\n"
+        # res += "\n".join([ self.template(x, True) for x in w] )
         return res
 
     def get_info_weather(self, weather_id:int) -> dict:
@@ -205,7 +219,7 @@ class HorWBot:
             {"id": 501, "title": "Дощ поиірний 💧", "description": "помірний дощ", "icon": "10d"},
             {"id": 502, "title": "Дощ гарний 💧💧", "description": "сильний дощ", "icon": "10d"},
             {"id": 503, "title": "Дощ (як з відра) 💧💧💧", "description": "дуже сильний дощ", "icon": "10d"},
-            {"id": 504, "title": "Дощара (та ну нах..) 💧💧💧💧", "description": "екстремальний дощ", "icon": "10d"},
+            {"id": 504, "title": "Дощара  💧💧💧💧", "description": "екстремальний дощ", "icon": "10d"},
             {"id": 511, "title": "Дощ 💧❄", "description": "холодний дощ", "icon": "13d"},
             {"id": 520, "title": "Дощ 💧💧", "description": "невеликий інтенсивний дощ ", "icon": "09d"},
             {"id": 521, "title": "Дощ 💧💧", "description": "дощ", "icon": "10d"},
@@ -247,13 +261,13 @@ class HorWBot:
     def get_mark_for_wind_angle(self, wind_angle:int) -> str:
         wind_angle = int( wind_angle )
         if wind_angle > 0 and wind_angle < 90:
-            return f"ПнСх"
+            return f"Пн-Сх"
         elif wind_angle > 90 and wind_angle < 180:
-            return f"ПдСх"
+            return f"Пд-Сх"
         elif wind_angle > 180 and wind_angle < 240:
-            return f"ПдЗх"
+            return f"Пд-Зх"
         elif wind_angle > 240 and wind_angle < 360:
-            return f"ПнЗх"
+            return f"Пн-Зх"
         elif wind_angle == 0:
             return "Пн"
         elif wind_angle == 90:

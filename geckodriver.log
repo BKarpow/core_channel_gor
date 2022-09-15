@@ -1299,3 +1299,123 @@ DevTools listening on ws://localhost:59384/devtools/browser/fd6dfff2-6369-4087-9
 1662604895202	Marionette	INFO	Stopped listening on port 59393
 1662673041192	geckodriver	INFO	Listening on 127.0.0.1:59483
 1662673044283	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "--remote-debugging-port" "59484" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "C:\\Users\\38093\\AppData\\Local\\Temp\\rust_mozprofileu4NGYK"
+1662745267037	geckodriver	INFO	Listening on 127.0.0.1:49206
+1662745270214	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "--remote-debugging-port" "49207" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "C:\\Users\\38093\\AppData\\Local\\Temp\\rust_mozprofileyhg9Yp"
+1662745272014	Marionette	INFO	Marionette enabled
+1662745272023	Marionette	INFO	Listening on port 49218
+WebDriver BiDi listening on ws://localhost:49207
+Read port: 49218
+1662745272324	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\38093\\AppData\\Local\\Temp\\rust_mozprofileyhg9Yp\\search.json.mozlz4", (void 0)))
+DevTools listening on ws://localhost:49207/devtools/browser/a1e7aa4a-6100-4174-ba84-fb51afacc5f3
+1662745303637	Marionette	INFO	Stopped listening on port 49218
+JavaScript error: resource://gre/modules/AsyncShutdown.jsm, line 719: Error: Phase "Sqlite.jsm: wait until all connections are closed" is finished, it is too late to register completion condition "protections.sqlite#0: waiting for shutdown"
+1662857584852	geckodriver	INFO	Listening on 127.0.0.1:51500
+1662857587901	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "--remote-debugging-port" "51501" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "C:\\Users\\38093\\AppData\\Local\\Temp\\rust_mozprofile4ADuPa"
+1662857589673	Marionette	INFO	Marionette enabled
+1662857589683	Marionette	INFO	Listening on port 51511
+WebDriver BiDi listening on ws://localhost:51501
+Read port: 51511
+1662857590238	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\38093\\AppData\\Local\\Temp\\rust_mozprofile4ADuPa\\search.json.mozlz4", (void 0)))
+DevTools listening on ws://localhost:51501/devtools/browser/78811eae-694e-4d68-927c-799d4a18d373
+1662857621696	Marionette	INFO	Stopped listening on port 51511
+JavaScript error: resource://gre/modules/AsyncShutdown.jsm, line 719: Error: Phase "Sqlite.jsm: wait until all connections are closed" is finished, it is too late to register completion condition "protections.sqlite#0: waiting for shutdown"
+1662864336049	geckodriver	INFO	Listening on 127.0.0.1:52979
+1662864339072	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "--remote-debugging-port" "52980" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "C:\\Users\\38093\\AppData\\Local\\Temp\\rust_mozprofileghKu6B"
+1662864340582	Marionette	INFO	Marionette enabled
+1662864340592	Marionette	INFO	Listening on port 52991
+WebDriver BiDi listening on ws://localhost:52980
+Read port: 52991
+1662864341185	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\38093\\AppData\\Local\\Temp\\rust_mozprofileghKu6B\\search.json.mozlz4", (void 0)))
+DevTools listening on ws://localhost:52980/devtools/browser/83f7aa41-b33e-40c5-a76a-f1b7c69e3af7
+1662864372228	Marionette	INFO	Stopped listening on port 52991
+JavaScript error: resource://gre/modules/AsyncShutdown.jsm, line 719: Error: Phase "Sqlite.jsm: wait until all connections are closed" is finished, it is too late to register completion condition "protections.sqlite#0: waiting for shutdown"
+1662881488411	geckodriver	INFO	Listening on 127.0.0.1:57162
+1662881491464	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "--remote-debugging-port" "57163" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "C:\\Users\\38093\\AppData\\Local\\Temp\\rust_mozprofilew1pwJm"
+1662881492999	Marionette	INFO	Marionette enabled
+1662881493009	Marionette	INFO	Listening on port 57174
+Read port: 57174
+WebDriver BiDi listening on ws://localhost:57163
+1662881493276	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\38093\\AppData\\Local\\Temp\\rust_mozprofilew1pwJm\\search.json.mozlz4", (void 0)))
+DevTools listening on ws://localhost:57163/devtools/browser/d1645d86-a73b-4c8e-af29-f09a73ea28cc
+1662881523701	Marionette	INFO	Stopped listening on port 57174
+JavaScript error: resource://gre/modules/Sqlite.jsm, line 1108: Error: Sqlite.jsm has been shutdown. Cannot open connection to: C:\Users\38093\AppData\Local\Temp\rust_mozprofilew1pwJm\protections.sqlite
+1662912991969	geckodriver	INFO	Listening on 127.0.0.1:58481
+1662912995026	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "--remote-debugging-port" "58482" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "C:\\Users\\38093\\AppData\\Local\\Temp\\rust_mozprofileC3lXnQ"
+1662912996714	Marionette	INFO	Marionette enabled
+1662912996726	Marionette	INFO	Listening on port 58494
+Read port: 58494
+WebDriver BiDi listening on ws://localhost:58482
+1662912996957	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\38093\\AppData\\Local\\Temp\\rust_mozprofileC3lXnQ\\search.json.mozlz4", (void 0)))
+DevTools listening on ws://localhost:58482/devtools/browser/da3cc6e5-5390-4599-94a8-3fb4925e1550
+1662913026812	Marionette	INFO	Stopped listening on port 58494
+!!! error running onStopped callback: TypeError: callback is not a function
+JavaScript error: resource://gre/modules/AsyncShutdown.jsm, line 719: Error: Phase "Sqlite.jsm: wait until all connections are closed" is finished, it is too late to register completion condition "protections.sqlite#0: waiting for shutdown"
+1662946096462	geckodriver	INFO	Listening on 127.0.0.1:49534
+1662946099519	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "--remote-debugging-port" "49535" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "C:\\Users\\38093\\AppData\\Local\\Temp\\rust_mozprofilegW2lsZ"
+1662946101323	Marionette	INFO	Marionette enabled
+1662946101331	Marionette	INFO	Listening on port 49544
+WebDriver BiDi listening on ws://localhost:49535
+Read port: 49544
+1662946101712	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\38093\\AppData\\Local\\Temp\\rust_mozprofilegW2lsZ\\search.json.mozlz4", (void 0)))
+DevTools listening on ws://localhost:49535/devtools/browser/852f7522-5a70-4f3c-b45e-2698b590be29
+1662946133341	Marionette	INFO	Stopped listening on port 49544
+JavaScript error: resource://gre/modules/AsyncShutdown.jsm, line 719: Error: Phase "Sqlite.jsm: wait until all connections are closed" is finished, it is too late to register completion condition "protections.sqlite#0: waiting for shutdown"
+1663025086011	geckodriver	INFO	Listening on 127.0.0.1:60745
+1663025089085	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "--remote-debugging-port" "60746" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "C:\\Users\\38093\\AppData\\Local\\Temp\\rust_mozprofileO63RT6"
+1663025090797	Marionette	INFO	Marionette enabled
+1663025090812	Marionette	INFO	Listening on port 60756
+WebDriver BiDi listening on ws://localhost:60746
+Read port: 60756
+1663025091297	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\38093\\AppData\\Local\\Temp\\rust_mozprofileO63RT6\\search.json.mozlz4", (void 0)))
+DevTools listening on ws://localhost:60746/devtools/browser/fcfa7119-fcae-449b-95a6-286bac951a1a
+1663025122988	Marionette	INFO	Stopped listening on port 60756
+1663069551375	geckodriver	INFO	Listening on 127.0.0.1:54273
+1663069554447	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "--remote-debugging-port" "54274" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "C:\\Users\\38093\\AppData\\Local\\Temp\\rust_mozprofilewsEyTd"
+1663069556774	Marionette	INFO	Marionette enabled
+1663069556782	Marionette	INFO	Listening on port 54284
+WebDriver BiDi listening on ws://localhost:54274
+Read port: 54284
+1663069557079	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\38093\\AppData\\Local\\Temp\\rust_mozprofilewsEyTd\\search.json.mozlz4", (void 0)))
+DevTools listening on ws://localhost:54274/devtools/browser/a6d183cb-6d28-46c6-899e-c41a9a3ff232
+1663069588802	Marionette	INFO	Stopped listening on port 54284
+JavaScript error: resource://gre/modules/AsyncShutdown.jsm, line 719: Error: Phase "Sqlite.jsm: wait until all connections are closed" is finished, it is too late to register completion condition "protections.sqlite#0: waiting for shutdown"
+1663162521307	geckodriver	INFO	Listening on 127.0.0.1:50724
+1663162524555	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "--remote-debugging-port" "50725" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "C:\\Users\\38093\\AppData\\Local\\Temp\\rust_mozprofile5QQm6g"
+1663162526777	Marionette	INFO	Marionette enabled
+1663162526785	Marionette	INFO	Listening on port 50735
+WebDriver BiDi listening on ws://localhost:50725
+Read port: 50735
+1663162527112	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\38093\\AppData\\Local\\Temp\\rust_mozprofile5QQm6g\\search.json.mozlz4", (void 0)))
+DevTools listening on ws://localhost:50725/devtools/browser/feab0078-0f41-4228-8f4d-3f823cda3a48
+1663162558659	Marionette	INFO	Stopped listening on port 50735
+JavaScript error: resource://gre/modules/AsyncShutdown.jsm, line 719: Error: Phase "Sqlite.jsm: wait until all connections are closed" is finished, it is too late to register completion condition "protections.sqlite#0: waiting for shutdown"
+1663163826503	geckodriver	INFO	Listening on 127.0.0.1:51061
+1663163829536	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "--remote-debugging-port" "51062" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "C:\\Users\\38093\\AppData\\Local\\Temp\\rust_mozprofileJUA52a"
+1663163830155	Marionette	INFO	Marionette enabled
+1663163830162	Marionette	INFO	Listening on port 51072
+WebDriver BiDi listening on ws://localhost:51062
+Read port: 51072
+1663163830359	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\38093\\AppData\\Local\\Temp\\rust_mozprofileJUA52a\\search.json.mozlz4", (void 0)))
+DevTools listening on ws://localhost:51062/devtools/browser/8daa32b0-0092-49be-b337-77fb4b155558
+1663163860728	Marionette	INFO	Stopped listening on port 51072
+JavaScript error: resource://gre/modules/AsyncShutdown.jsm, line 719: Error: Phase "Sqlite.jsm: wait until all connections are closed" is finished, it is too late to register completion condition "protections.sqlite#0: waiting for shutdown"
+1663182503317	geckodriver	INFO	Listening on 127.0.0.1:55507
+1663182506460	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "--remote-debugging-port" "55508" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "C:\\Users\\38093\\AppData\\Local\\Temp\\rust_mozprofileWgVckF"
+1663182508426	Marionette	INFO	Marionette enabled
+1663182508434	Marionette	INFO	Listening on port 55519
+WebDriver BiDi listening on ws://localhost:55508
+Read port: 55519
+1663182508894	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\38093\\AppData\\Local\\Temp\\rust_mozprofileWgVckF\\search.json.mozlz4", (void 0)))
+DevTools listening on ws://localhost:55508/devtools/browser/4195c82b-fb4a-4460-b884-13e9933598a7
+1663182541841	Marionette	INFO	Stopped listening on port 55519

@@ -133,7 +133,6 @@ class AirAlarmHorodische:
         self.connection.commit()
         duration_interbal = int(message['date']) - self.last_time_stamp
         self.last_time_stamp = 0
-        self.queue.start_q_sender()
         return self.get_string_duration_alarm(duration_interbal)
 
 
@@ -151,6 +150,7 @@ class AirAlarmHorodische:
             msg = self.message_air_alarm_end.format(dur=dur, date=self.get_string_date(message['date']))
             logger.info(msg)
             self.send_message(msg)
+            self.queue.start_q_sender()
 
 
     def init_table_for_db(self):

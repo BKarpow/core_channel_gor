@@ -9,6 +9,7 @@ from losses import CombatLosses
 from radiation import RadiationAlert
 from parse_rad import RadInformer
 from qu import  SmartSender
+from rocket_strike import RocketStrikeInformer
 import argparse
 import threading
 import os
@@ -38,6 +39,9 @@ air = AirAlarmHorodische(queue)
 air.save_log_file()
 air.add_city_tag('#Черкаська_область')
 air.add_city_tag('Городищенська_територіальна_громада')
+
+# Rocket strike
+rocket = RocketStrikeInformer(queue)
 
 # combat losses
 combat_losses = CombatLosses(queue)
@@ -85,6 +89,7 @@ def help():
         ('start-rss', 'Запуск відображення новини.'),
         ('start-rad', 'Запуск відображення радіаційних та хімічних загроз.'),
         ('start-rad-level', 'Запуск інформера радіаційного рівні по місту.'),
+        ('start-rock', 'Запуск інформера загрози ракетних ударів.'),
         ('stop', 'Зупиняє всі модулі.'),
         ('stop-air', 'Зупиняє повідомленя про тривогу.'),
         ('stop-com', 'Зупиняє повідомленя про комендантську годину.'),
@@ -94,6 +99,7 @@ def help():
         ('stoo-losses', 'Зупинка повідомлень про бойові втрати.'),
         ('stop-rad', 'Запуск відображення радіаційних та хімічних загроз.'),
         ('stop-rad-level', 'Зупинка інформера радіаційного рівні по місту.'),
+        ('stop-rock', 'Зупинка інформера загрози ракетних ударів.'),
         ('status', 'Показує статуси модулдів.'),
         ('exit', 'Вийти із сервісу.'),
     ]
@@ -109,7 +115,8 @@ status_modules = {
     'CronAlert': False,
     'CombatLosses': False,
     'RadiationAlert': False,
-    'RadInformer': False
+    'RadInformer': False,
+    "RocketStrikeInformer": False
 }
 
 
@@ -155,6 +162,7 @@ def start_all_modules():
     start_module(w, 'WeatherAlert')
     start_module(rad, 'RadiationAlert')
     start_module(rad_level, 'RadInformer')
+    start_module(rocket, "RocketStrikeInformer")
 
 
 def stop_all_modules():
@@ -166,6 +174,7 @@ def stop_all_modules():
     stop_module(combat_losses, 'CombatLosses')
     stop_module(rad, 'RadiationAlert')
     stop_module(rad_level, 'RadInformer')
+    stop_module(rocket, "RocketStrikeInformer")
 
 
 if args.comand == 'all':
@@ -177,6 +186,8 @@ while True:
     match comm:
         case 'status' | 'list' | 'info':
             show_status()
+        case "start-rock":
+            start_module(rocket, "RocketStrikeInformer")
         case 'start-rad-level':
             start_module(rad_level, 'RadInformer')
         case 'start-rad':
@@ -213,6 +224,8 @@ while True:
             stop_module(rad, 'RadiationAlert')
         case 'stop-rad-level':
             stop_module(rad_level, 'RadInformer')
+        case "stop-rock":
+            stop_module(rocket, "RocketStrikeInformer")
         case 'help' | '?' | '-h' | '/?':
             help()
         case 'ex' | 'close' | 'exit':

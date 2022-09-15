@@ -1,4 +1,5 @@
 
+from tkinter.messagebox import NO
 import telebot
 import time
 import os
@@ -13,7 +14,7 @@ from qu import SmartSender
 class CombatLosses:
     def __init__(self,  queue: SmartSender) -> None:
         self.queue = queue
-        self.timeout_loop = 450
+        self.timeout_loop = 120
         self.json_data_url = os.getenv('JSON_SOURCE_URL')
         self.bot_token = os.getenv('TELEGRAM_TOKEN')
         self.chat_id = os.getenv('CHAT_ID')
@@ -71,13 +72,17 @@ class CombatLosses:
     def strip_tags(self, text: str) -> str:
         logger.debug(f"Фільтрція повідомлення: {text}")
         text = text.replace('<br />', '\n')
+        text = text.replace('**', '')
         text = text.replace('Підписатися', 'Джерело')
         text = text.replace('ГШ ЗСУ', '@GeneralStaffZSU')
+        text = text.replace('[|', '')
         t = re.sub(r'<[^>]+?>', '', text);
+        t = re.sub(r'\|\]\(http[^\s]+', '', text);
         t = re.sub(r'\n+', '\n', t)
+        t = re.sub(r'\s+', ' ', t)
         t = re.sub(r'#[\w]+', '', t)
         dw = self.calc_duration_war()
-        t += f"\n Війна триває вже {dw} день."
+        t += f"\n{dw} день війнм з ₚосією.\n"
         t += '\n#втрати_рашистів'
         return t
 
@@ -94,13 +99,14 @@ class CombatLosses:
             logger.error('Некоректна відповідь API...')
             return None
         message = messages['losses']
-        ph = Path(message['path'])
-        file_name = message['filename']
-        to_dir = self.losses_folder / file_name
-        if not to_dir.exists():
-            self.send_message(ph, message['message'])
-            copy(ph.absolute(), to_dir.absolute())
-            logger.info(f"Coping to file")
+        if message.get('filename') is not None:
+            ph = Path(message['path'])
+            file_name = message['filename']
+            to_dir = self.losses_folder / file_name
+            if not to_dir.exists():
+                self.send_message(ph, message['message'])
+                copy(ph.absolute(), to_dir.absolute())
+                logger.info(f"Coping to file")
 
         
 

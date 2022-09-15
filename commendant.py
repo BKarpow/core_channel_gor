@@ -9,7 +9,7 @@ from qu import SmartSender
 
 class CommendantTime:
     def __init__(self, queue: SmartSender) -> None:
-        self.TIMEOUT = 0.65
+        self.TIMEOUT = 0.73
         self.START_STOP_TRIGGER = False
         self.BOT_TOKEN = os.getenv("TELEGRAM_TOKEN")
         self.BOT_CHAT_ID = os.getenv("CHAT_ID")
