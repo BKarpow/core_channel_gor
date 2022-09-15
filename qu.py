@@ -40,6 +40,7 @@ class SmartSender:
         return bool(self._active)
 
     def send_text_now(self, text: str):
+        # self.bot.send_message("@memas_media", text)
         self.bot.send_message(self.chat_id, text)
 
     def send_text(self, msg: str):

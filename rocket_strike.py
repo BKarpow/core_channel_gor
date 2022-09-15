@@ -6,6 +6,11 @@ from os import getenv
 from time import sleep
 
 
+def clean_string_message(message: str) -> str :
+    message = message.replace("**", "")
+    return message
+
+
 class RocketStrikeInformer:
 
     def __init__(self, sender: SmartSender) -> None:
@@ -49,7 +54,7 @@ class RocketStrikeInformer:
                 logger.error("Error network: {res.status_code}")
                 return data
             res = res.json()
-            if res.get("rocketStrike") == None:
+            if res is None or res.get("rocketStrike") == None:
                 logger.error("Invalid JSON data response.")
                 return data
             return res["rocketStrike"]
@@ -68,7 +73,7 @@ class RocketStrikeInformer:
         data = self.get_data()
         if data["active"] and self.is_unique_warning(data["id"]):
             logger.info("Rocket strike WARNING!!!!")
-            self.sender.send_text_now(data["msg"])
+            self.sender.send_text_now(clean_string_message(data["msg"]))
 
     def loop(self):
         logger.info("Start alert sender for rocket strike warning.")

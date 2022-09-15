@@ -2526,3 +2526,58 @@ https://gormrada.gov.ua/news/1663050727/
 2022-09-15 09:47:19.697 | INFO     | parse_rad:loop:114 - Start service send radiation level in 12:00:00 on channel @horodysche_channel
 2022-09-15 09:47:19.747 | INFO     | air:loop:238 - ['#Черкаська_область', 'Городищенська_територіальна_громада']
 2022-09-15 09:47:19.752 | INFO     | commendant:input_times:48 -  Час початку 23:00, кінця 05:00 
+2022-09-15 09:47:59.551 | INFO     | losses:loop:115 - Початок роботи чканеру бойових втрат рашистів та відправки їх на канал @horodysche_channel
+2022-09-15 09:47:59.551 | INFO     | rsswatch:loop:166 - Початок роботи сканеру новини, на канал @horodysche_channel
+2022-09-15 09:47:59.551 | INFO     | air:loop:237 - Початок роботи сканеру повітряних тривог. Канал @horodysche_channel, таймаут: 10 секунд.
+2022-09-15 09:47:59.555 | INFO     | commendant:loop:115 - Старт повідомлень про комендатську годину
+2022-09-15 09:47:59.556 | INFO     | weather:loop:301 - Почвток роботи боту прогнозу погоди для каналу @horodysche_channel, спрацьовує у 08:10, оновлюєтся кожні 0.65 секунди.
+2022-09-15 09:47:59.556 | DEBUG    | radiation:loop:107 - Початок роботи сканеру радіаційної небезпеки
+2022-09-15 09:47:59.557 | INFO     | parse_rad:loop:114 - Start service send radiation level in 12:00:00 on channel @horodysche_channel
+2022-09-15 09:47:59.557 | INFO     | rocket_strike:run:19 - Working start
+2022-09-15 09:47:59.575 | INFO     | air:loop:238 - ['#Черкаська_область', 'Городищенська_територіальна_громада']
+2022-09-15 09:47:59.578 | INFO     | commendant:input_times:48 -  Час початку 23:00, кінця 05:00 
+2022-09-15 09:47:59.599 | INFO     | rocket_strike:loop:74 - Start alert sender for rocket strike warning.
+2022-09-15 10:00:58.999 | DEBUG    | radiation:loop:107 - Початок роботи сканеру радіаційної небезпеки
+2022-09-15 10:00:58.946 | INFO     | losses:loop:115 - Початок роботи чканеру бойових втрат рашистів та відправки їх на канал @horodysche_channel
+2022-09-15 10:00:59.021 | INFO     | parse_rad:loop:114 - Start service send radiation level in 12:00:00 on channel @horodysche_channel
+2022-09-15 10:00:58.948 | INFO     | rsswatch:loop:166 - Початок роботи сканеру новини, на канал @horodysche_channel
+2022-09-15 10:00:58.953 | INFO     | air:loop:237 - Початок роботи сканеру повітряних тривог. Канал @horodysche_channel, таймаут: 10 секунд.
+2022-09-15 10:00:58.963 | INFO     | commendant:loop:115 - Старт повідомлень про комендатську годину
+2022-09-15 10:00:59.021 | INFO     | rocket_strike:run:19 - Working start
+2022-09-15 10:00:58.956 | INFO     | weather:loop:301 - Почвток роботи боту прогнозу погоди для каналу @horodysche_channel, спрацьовує у 08:10, оновлюєтся кожні 0.65 секунди.
+2022-09-15 10:00:59.112 | INFO     | air:loop:238 - ['#Черкаська_область', 'Городищенська_територіальна_громада']
+2022-09-15 10:00:59.113 | INFO     | commendant:input_times:48 -  Час початку 23:00, кінця 05:00 
+2022-09-15 10:00:59.138 | INFO     | rocket_strike:loop:74 - Start alert sender for rocket strike warning.
+2022-09-15 10:01:01.358 | ERROR    | radiation:get_data:45 - Помилка мережі, сервер не відплвів
+2022-09-15 10:01:01.358 | ERROR    | air:get_data_channell:178 - Помилка інтернету, втрата зв'язку.
+2022-09-15 10:01:01.364 | ERROR    | radiation:get_message_my_regions:52 - Некоректні дані серверу тривог.
+2022-09-15 10:01:01.368 | DEBUG    | air:send_error:98 - Send error Повітряні тривоги помилка: 
+Помилка інтернету, втрата зв'язку.
+2022-09-15 10:01:01.375 | ERROR    | radiation:get_message_my_regions:52 - Некоректні дані серверу тривог.
+2022-09-15 10:01:01.451 | ERROR    | losses:get_json_data:69 - Помилка звя'зку з мерехою
+2022-09-15 10:01:01.452 | ERROR    | rocket_strike:get_data:57 - Error in getting JSON data.
+2022-09-15 10:04:46.501 | INFO     | losses:loop:115 - Початок роботи чканеру бойових втрат рашистів та відправки їх на канал @horodysche_channel
+2022-09-15 10:04:46.501 | INFO     | rsswatch:loop:166 - Початок роботи сканеру новини, на канал @horodysche_channel
+2022-09-15 10:04:46.501 | INFO     | air:loop:237 - Початок роботи сканеру повітряних тривог. Канал @horodysche_channel, таймаут: 10 секунд.
+2022-09-15 10:04:46.502 | INFO     | weather:loop:301 - Почвток роботи боту прогнозу погоди для каналу @horodysche_channel, спрацьовує у 08:10, оновлюєтся кожні 0.65 секунди.
+2022-09-15 10:04:46.503 | DEBUG    | radiation:loop:107 - Початок роботи сканеру радіаційної небезпеки
+2022-09-15 10:04:46.503 | INFO     | parse_rad:loop:114 - Start service send radiation level in 12:00:00 on channel @horodysche_channel
+2022-09-15 10:04:46.504 | INFO     | rocket_strike:run:19 - Working start
+2022-09-15 10:04:46.506 | INFO     | commendant:loop:115 - Старт повідомлень про комендатську годину
+2022-09-15 10:04:46.547 | INFO     | air:loop:238 - ['#Черкаська_область', 'Городищенська_територіальна_громада']
+2022-09-15 10:04:46.560 | INFO     | rocket_strike:loop:74 - Start alert sender for rocket strike warning.
+2022-09-15 10:04:46.564 | INFO     | commendant:input_times:48 -  Час початку 23:00, кінця 05:00 
+2022-09-15 11:57:43.627 | INFO     | losses:loop:115 - Початок роботи чканеру бойових втрат рашистів та відправки їх на канал @horodysche_channel
+2022-09-15 11:57:43.628 | INFO     | rsswatch:loop:166 - Початок роботи сканеру новини, на канал @horodysche_channel
+2022-09-15 11:57:43.629 | INFO     | air:loop:237 - Початок роботи сканеру повітряних тривог. Канал @horodysche_channel, таймаут: 10 секунд.
+2022-09-15 11:57:43.629 | INFO     | weather:loop:301 - Почвток роботи боту прогнозу погоди для каналу @horodysche_channel, спрацьовує у 08:10, оновлюєтся кожні 0.65 секунди.
+2022-09-15 11:57:43.630 | DEBUG    | radiation:loop:107 - Початок роботи сканеру радіаційної небезпеки
+2022-09-15 11:57:43.631 | INFO     | parse_rad:loop:114 - Start service send radiation level in 12:00:00 on channel @horodysche_channel
+2022-09-15 11:57:43.631 | INFO     | rocket_strike:run:19 - Working start
+2022-09-15 11:57:43.634 | INFO     | commendant:loop:115 - Старт повідомлень про комендатську годину
+2022-09-15 11:57:43.643 | INFO     | air:loop:238 - ['#Черкаська_область', 'Городищенська_територіальна_громада']
+2022-09-15 11:57:43.665 | INFO     | rocket_strike:loop:74 - Start alert sender for rocket strike warning.
+2022-09-15 11:57:43.668 | INFO     | commendant:input_times:48 -  Час початку 23:00, кінця 05:00 
+2022-09-15 11:58:19.724 | INFO     | rocket_strike:execute:70 - Rocket strike WARNING!!!!
+2022-09-15 12:00:00.429 | INFO     | parse_rad:send:103 - No radiarion date for 12:00:00
+2022-09-15 12:00:00.471 | INFO     | parse_rad:send:105 - Last getting radiarion date in 13:00:00

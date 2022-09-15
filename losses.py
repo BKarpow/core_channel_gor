@@ -59,14 +59,19 @@ class CombatLosses:
         return d
 
     def get_json_data(self) -> dict:
+        data = {
+            "losses": dict()
+        }
         try:
             req = get(self.json_data_url)
             if req.status_code == 200:
                 return req.json()
             else:
                 logger.error(req.json())
+                return data
         except:
             logger.error('Помилка звя\'зку з мерехою')
+            return data
 
 
     def strip_tags(self, text: str) -> str:
