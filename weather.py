@@ -70,6 +70,9 @@ class HorWBot:
             if req.status_code != 200:
                 logger.error(req)
             self.w_data = req.json()
+            with open('weather_set_today.json', 'w') as f :
+                f.write(req.text)
+                logger.info('Saved file set weather')
             logger.info("Дані про погоду отримано успішно!")
         except:
             logger.error('Помилка інтернету...')

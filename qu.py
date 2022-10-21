@@ -10,6 +10,7 @@ class SmartSender:
     def __init__(self, token: str, chat_id: str) -> None:
         self.sleep_timeout_send = 45
         self.chat_id = chat_id
+        self.debug_chat_id = "@tester199922"
         self.bot = telebot.TeleBot(token, parse_mode='html')
         self.connect = sqlite3.connect(
             path.join(path.dirname(__file__), 'queue.db'),
@@ -42,6 +43,14 @@ class SmartSender:
     def send_text_now(self, text: str):
         # self.bot.send_message("@memas_media", text)
         self.bot.send_message(self.chat_id, text)
+
+    def send_text_to_chat_id(self, chat_id: str, text: str) -> None:
+        logger.info(f"Send text: {text}, to chat id: {chat_id}")
+        self.bot.send_message(chat_id, text)
+
+    def send_to_debug_chat(self, text: str) -> None:
+        logger.info("Send message to debug chat.")
+        self.send_text_to_chat_id(self.debug_chat_id, text)
 
     def send_text(self, msg: str):
         if self.is_active():

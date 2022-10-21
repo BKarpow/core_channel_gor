@@ -179,6 +179,7 @@ def stop_all_modules():
 
 if args.comand == 'all':
     start_all_modules()
+    queue.send_to_debug_chat('Сервіси каналу Городище live запущені!')
 
 
 while True:

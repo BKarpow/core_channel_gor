@@ -2,6 +2,7 @@ from requests import get
 from loguru import logger
 from time import sleep, strftime
 from screenshot import ScreenAirAlerts
+from alert_sound import AirSound
 
 import datetime
 import os
@@ -19,7 +20,7 @@ class AirAlarmHorodische:
         self.keywords_for_search_alerts = []
         self.keyword_air_start = 'Повітряна тривога'
         self.keyword_air_end = 'Відбій тривоги'
-        self.message_air_alarm_start = '❗️❗️ ПОВІТРЯНА ТРИВОГА 🐔✈️🚀 ({keyword}), НЕОБХІДНО ПРОЙТИ В УКРИТТЯ 🛖 {date}\nКількість тривог за сьогодні: {la}'
+        self.message_air_alarm_start = '❗️❗️ ПОВІТРЯНА ТРИВОГА 🐔✈️🚀 ({keyword}), НЕОБХІДНО ПРОЙТИ В УКРИТТЯ 🛖 {date}\nКількість тривог за сьогодні: {la}.\nВсі наступні повідомлення (окрім важливих) в каналі відкладено до відбою тривоги!!'
         self.message_air_alarm_end = '🟢 ВІДБІЙ ПОВІТРЯНОЇ ТРИВОГИ {date} 😃🌤.\nТривалість повітряної тривоги {dur}.'
         self.chat_id = os.getenv('CHAT_ID')
         self.data_channel = {}
@@ -30,6 +31,7 @@ class AirAlarmHorodische:
         self._work = True
         self.screen = ScreenAirAlerts(self.chat_id, os.getenv('TELEGRAM_TOKEN'))
         self.queue = queue
+        self.air_s = AirSound()
         
         self.init_table_for_db()
 
@@ -116,11 +118,12 @@ class AirAlarmHorodische:
     def air_start(self, message,  msg_text: str):
         self.last_time_stamp = int( message['date'])
         self.queue.enable_active()
-        try:
-            self.screen.shot_screen()
-            self.screen.send_scren_to_telegram(msg_text)
-        except:
-            logger.error('Помилка відправки скріна...')
+        logger.info("Створення скріна відімкнено!")
+        # try:
+        #     self.screen.shot_screen()
+        #     self.screen.send_scren_to_telegram(msg_text)
+        # except:
+        #     logger.error('Помилка відправки скріна...')
         
 
     def air_end(self, message) -> str:
@@ -145,11 +148,13 @@ class AirAlarmHorodische:
             self.send_message( mess )
             logger.info(mess)
             self.air_start(message, mess)
+            self.air_s.alert_sound(start=True)
         if re.search(self.keyword_air_end, message['message']):
             dur = self.air_end(message)
             msg = self.message_air_alarm_end.format(dur=dur, date=self.get_string_date(message['date']))
             logger.info(msg)
             self.send_message(msg)
+            self.air_s.alert_sound(stop=True)
             self.queue.start_q_sender()
 
 
