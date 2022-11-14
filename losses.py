@@ -9,7 +9,7 @@ from pathlib import Path, PosixPath
 from loguru import logger
 from shutil import copy
 from qu import SmartSender
-
+from services import is_network
 
 class CombatLosses:
     def __init__(self,  queue: SmartSender) -> None:
@@ -29,8 +29,8 @@ class CombatLosses:
         self.war_start_date = "24.02.2022 05:00:00"
         self.text_losses = r'Загальні бойові втрати противника'
         self.format_time_loses = "%d.%m.%Y %H:%M:%S"
-        logger.add(self.log_file_info.absolute(), level='INFO', rotation='10 KB', compression='zip')
-        logger.add(self.log_file_error.absolute(), level='ERROR', rotation='10 KB', compression='zip')
+        # logger.add(self.log_file_info.absolute(), level='INFO', rotation='10 KB', compression='zip')
+        # logger.add(self.log_file_error.absolute(), level='ERROR', rotation='10 KB', compression='zip')
 
 
     def run(self) -> None:
@@ -62,6 +62,9 @@ class CombatLosses:
         data = {
             "losses": dict()
         }
+        if not is_network():
+            logger.error("No connection to network!")
+            return data
         try:
             req = get(self.json_data_url)
             if req.status_code == 200:

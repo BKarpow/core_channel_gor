@@ -1,8 +1,19 @@
 import winsound
 import threading
 import time
+import pyaimp
 from pathlib import Path
 from loguru import logger
+
+
+def aimp_muted(muted_flag: bool):
+        try:
+            amp = pyaimp.Client()
+            amp.set_muted(muted_flag)
+            logger.debug(f"AIMP muted: {muted_flag}")
+        except RuntimeError:
+            logger.error('Aimp not run!')
+
 
 class AirSound:
     def __init__(self) -> None:
@@ -35,11 +46,13 @@ class AirSound:
         this_hour = int(time.strftime("%H"))
         if this_hour >= self.start_hour and this_hour <= self.stop_hour:
             if start:
+                aimp_muted(True)
                 self.thread_sound_start()
                 logger.info('Air start sound play')
             elif stop:
                 self.thread_sound_stop()
                 logger.info('Air stop sound play')
+                aimp_muted(False)
             else:
                 logger.error("incorrect enable trigger start or stop")
         else:

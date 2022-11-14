@@ -1,7 +1,7 @@
 from ast import parse
 from loguru import logger
 from time import strftime, sleep
-
+from services import is_network
 import telebot
 import os
 import re
@@ -59,7 +59,7 @@ class CommendantTime:
 
 
     def send_message(self, text: str):
-        self.queue.send('text', text)
+        self.queue.send_text_now(text)
 
 
     def is_start_time(self, time_data: dict) -> bool:
@@ -86,6 +86,9 @@ class CommendantTime:
         # return False
 
     def send_video(self) -> None:
+        if not is_network():
+            logger.error("No connection to network!")
+            return
         if strftime('%H:%M:%S') == self.send_video_time + ':00':
             logger.info(f'Відправка відео хвилини мовчання {self.file_video}')
             # self.bot.send_video(self.BOT_CHAT_ID, open(self.file_video, 'rb'), caption=self.caption_video)
@@ -99,7 +102,7 @@ class CommendantTime:
         if not os.path.isdir(logs_dir) :
             os.mkdir(logs_dir)
         file_path_log = os.path.join(logs_dir, self.log_filename_format)
-        logger.add(file_path_log)
+        # logger.add(file_path_log)
 
 
     def run(self):

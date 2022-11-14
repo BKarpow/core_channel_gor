@@ -26,8 +26,8 @@ args = parser.parse_args()
 logs_dir = os.path.join(os.path.dirname(__file__), 'core_logs')
 if not os.path.isdir(logs_dir):
     os.mkdir(logs_dir)
-log_file_core = os.path.join(logs_dir, 'core_log-{time}.log')
-logger.add(log_file_core)
+log_file_core = os.path.join(logs_dir, 'core.log')
+logger.add(log_file_core, rotation="500 KB", compression="zip")
 logger.info('Початок роботи сервісів для каналу ' + os.getenv('CHAT_ID'))
 
 
@@ -36,7 +36,7 @@ queue = SmartSender(os.getenv('TELEGRAM_TOKEN'), os.getenv('CHAT_ID'))
 
 # air 
 air = AirAlarmHorodische(queue)
-air.save_log_file()
+# air.save_log_file()
 air.add_city_tag('#Черкаська_область')
 air.add_city_tag('Городищенська_територіальна_громада')
 
@@ -49,18 +49,18 @@ combat_losses = CombatLosses(queue)
 
 # rss
 rss = RssNewsSender(queue)
-rss.save_log_file()
+# rss.save_log_file()
 
 
 # cron
 cron = CronDemon()
-cron.start_logger()
+# cron.start_logger()
 
 
 
 # Weather
 w = HorWBot(queue)
-w.save_log_file()
+# w.save_log_file()
 
 
 
@@ -155,14 +155,14 @@ def stop_module(module, status_name: str) -> None:
 
 def start_all_modules():
     global status_modules
-    start_module(combat_losses, 'CombatLosses')
+    # start_module(combat_losses, 'CombatLosses')
     start_module(rss, 'RssNewsSender')
     start_module(air, 'AirAlertUa')
     start_module(comendant, 'ComendantAlert')
     start_module(w, 'WeatherAlert')
     start_module(rad, 'RadiationAlert')
     start_module(rad_level, 'RadInformer')
-    start_module(rocket, "RocketStrikeInformer")
+    # start_module(rocket, "RocketStrikeInformer")
 
 
 def stop_all_modules():

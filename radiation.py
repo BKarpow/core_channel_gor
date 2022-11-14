@@ -6,6 +6,7 @@ from telebot import TeleBot
 from requests import get
 from loguru import logger
 from pathlib import Path
+from services import is_network
 
 
 class RadiationAlert:
@@ -31,6 +32,9 @@ class RadiationAlert:
         self.bot.send_message(self.chat_id, t)
 
     def get_data(self) -> list | None:
+        if not is_network():
+            logger.error("No connection to network")
+            return []
         try:
             req = get(self.source_url)
             if req.status_code != 200:

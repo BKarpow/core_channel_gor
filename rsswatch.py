@@ -1,6 +1,7 @@
 from rss_parser import Parser
 from loguru import logger
 import requests as req
+from services import is_network
 
 import datetime
 import re
@@ -9,6 +10,7 @@ import time
 import os
 import sqlite3
 from qu import SmartSender
+from services import is_network
 
 class RssNewsSender:
     def __init__(self, sender: SmartSender) -> None:
@@ -111,6 +113,9 @@ class RssNewsSender:
 
     @logger.catch
     def get_data_xml(self) -> str:
+        if not is_network():
+            logger.error("No connection to network")
+            return ""
         try:
             resp = req.get(self.rss_xml_source_url)
             if resp.status_code == 200:
@@ -124,7 +129,7 @@ class RssNewsSender:
     @logger.catch
     def parse_rss(self):
         xml = self.get_data_xml()
-        if xml != None:
+        if xml != None and xml != '':
             parser = Parser(xml=xml)
             self.rss_feed = parser.parse()
         else:

@@ -3,13 +3,37 @@ from loguru import logger
 from time import sleep, strftime
 from screenshot import ScreenAirAlerts
 from alert_sound import AirSound
-
+from services import is_network
 import datetime
 import os
 import telebot
 import sqlite3
 import re
+import threading
 from qu import SmartSender
+
+
+def get_path_file_last_time() -> str:
+    fo = os.path.join(os.path.dirname(__file__), 'last_time_alert.txt')
+    logger.debug(f"Memory last time stamp file {fo}")
+    return fo
+
+
+def set_last_time(time: int) -> None:
+    logger.debug(f"Set last time stamp {time}")
+    with open(get_path_file_last_time(), 'w') as f:
+        f.write(str(time))
+
+
+def get_last_time() -> int:
+    with open(get_path_file_last_time(), 'r') as f:
+        time = f.read()
+    logger.debug(f"Get last time stamp {time}")
+    return int(time)
+
+
+
+
 
 class AirAlarmHorodische:
     def __init__(self, queue: SmartSender) -> None:
@@ -20,7 +44,7 @@ class AirAlarmHorodische:
         self.keywords_for_search_alerts = []
         self.keyword_air_start = 'Повітряна тривога'
         self.keyword_air_end = 'Відбій тривоги'
-        self.message_air_alarm_start = '❗️❗️ ПОВІТРЯНА ТРИВОГА 🐔✈️🚀 ({keyword}), НЕОБХІДНО ПРОЙТИ В УКРИТТЯ 🛖 {date}\nКількість тривог за сьогодні: {la}.\nВсі наступні повідомлення (окрім важливих) в каналі відкладено до відбою тривоги!!'
+        self.message_air_alarm_start = '❗️❗️ ПОВІТРЯНА ТРИВОГА 🐔✈️🚀 ({keyword}), Пройдіть в найблище УКРИТТЯ 🛖 {date}\nКількість тривог за сьогодні: {la}.'
         self.message_air_alarm_end = '🟢 ВІДБІЙ ПОВІТРЯНОЇ ТРИВОГИ {date} 😃🌤.\nТривалість повітряної тривоги {dur}.'
         self.chat_id = os.getenv('CHAT_ID')
         self.data_channel = {}
@@ -32,6 +56,7 @@ class AirAlarmHorodische:
         self.screen = ScreenAirAlerts(self.chat_id, os.getenv('TELEGRAM_TOKEN'))
         self.queue = queue
         self.air_s = AirSound()
+        self.air_alarm_map_path = r'C:\Users\38093\Documents\py\air_alarm_map\map.png'
         
         self.init_table_for_db()
 
@@ -114,11 +139,17 @@ class AirAlarmHorodische:
                 list_alerts.append(row)
         return list_alerts
 
+    def _send_map_image(self, msg_text):
+        sleep(15)
+        logger.info("Send air alarm map")
+        self.bot.send_photo(self.chat_id, open(self.air_alarm_map_path, 'rb'), msg_text)
 
     def air_start(self, message,  msg_text: str):
         self.last_time_stamp = int( message['date'])
+        set_last_time(self.last_time_stamp)
         self.queue.enable_active()
-        logger.info("Створення скріна відімкнено!")
+        # logger.info("Створення скріна відімкнено!")
+        threading.Thread(target=self._send_map_image, args=( msg_text, )).start()
         # try:
         #     self.screen.shot_screen()
         #     self.screen.send_scren_to_telegram(msg_text)
@@ -127,16 +158,17 @@ class AirAlarmHorodische:
         
 
     def air_end(self, message) -> str:
-        if  self.last_time_stamp == 0:
+        if  get_last_time() == 0:
             logger.error('Помилка вирахування часу тривоги, невірний останній таймштамп!')
             return ''
         date_end = message['date']
         q = f'UPDATE "alert" SET time_end = {date_end} WHERE time_start = {self.last_time_stamp}'
         self.db_cursor.execute(q)
         self.connection.commit()
-        duration_interbal = int(message['date']) - self.last_time_stamp
+        duration_interval = int(message['date']) - get_last_time()
+        set_last_time(0)
         self.last_time_stamp = 0
-        return self.get_string_duration_alarm(duration_interbal)
+        return self.get_string_duration_alarm(duration_interval)
 
 
     def send_start_or_end_air_alarm(self, message) -> None:
@@ -165,6 +197,10 @@ class AirAlarmHorodische:
 
 
     def get_data_channell(self):
+        if not is_network():
+            self.messages = []
+            logger.error("No connection to network!")
+            return
         try:
             req = get(self.url_json_data_with_channel)
             if req.status_code == 200:

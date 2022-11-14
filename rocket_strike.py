@@ -4,6 +4,7 @@ from pathlib import Path
 from loguru import logger
 from os import getenv
 from time import sleep
+from services import is_network
 
 
 def clean_string_message(message: str) -> str :
@@ -48,6 +49,9 @@ class RocketStrikeInformer:
             "msg": "",
             "id": 0
         }
+        if not is_network():
+            logger.error("No connection to network")
+            return data
         try:
             res = get(self.url_data)
             if res.status_code != 200:
